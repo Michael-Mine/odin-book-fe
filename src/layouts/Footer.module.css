@@ -1,0 +1,18 @@
+footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.myLogo {
+  height: 50px;
+  width: 121px;
+}
+
+.logo:hover,
+.logo.react:hover,
+.myLogo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}

@@ -1,0 +1,39 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Footer component > renders 3 links with logos 1`] = `
+<div>
+  <footer>
+    <a
+      href="https://vite.dev"
+      target="_blank"
+    >
+      <img
+        alt="Vite logo"
+        class="_logo_44095f"
+        src="/favicon.svg"
+      />
+    </a>
+    <a
+      data-testid="my-site-link"
+      href="https://mrmine.net/"
+      target="_blank"
+    >
+      <img
+        alt="Mr Mine logo"
+        class="_myLogo_44095f"
+        src="/src/assets/logo.png"
+      />
+    </a>
+    <a
+      href="https://react.dev"
+      target="_blank"
+    >
+      <img
+        alt="React logo"
+        class="_logo_44095f"
+        src="/src/assets/react.svg"
+      />
+    </a>
+  </footer>
+</div>
+`;
