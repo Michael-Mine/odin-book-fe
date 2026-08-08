@@ -1,0 +1,30 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  background-color: #783192;
+  padding: 1.5em;
+}
+
+.homeIcon,
+.githubLogo {
+  height: 50px;
+  width: 50px;
+
+  filter: invert(78%) sepia(35%) saturate(624%) hue-rotate(137deg)
+    brightness(84%) contrast(84%);
+}
+
+.homeIcon:hover,
+.githubLogo:hover {
+  filter: invert(92%) sepia(2%) saturate(870%) hue-rotate(147deg)
+    brightness(108%) contrast(88%);
+}
+
+.myLogo {
+  height: 50px;
+  width: 121px;
+}
+
+.myLogo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
