@@ -1,9 +1,14 @@
 import { useOutletContext } from "react-router";
+import Header from "../layouts/Header";
 
 function Home() {
   const [user, setUser] = useOutletContext();
 
-  return <h1>Welcome {user.name}</h1>;
+  return (
+    <>
+      <Header setUser={setUser} />
+    </>
+  );
 }
 
 export default Home;
