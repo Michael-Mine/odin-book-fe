@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SignUp from "./SignUp";
 
-function Login({ setLoggedIn }) {
+function Login({ setUser }) {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPass, setInputPass] = useState("");
   const [response, setResponse] = useState(null);
@@ -12,7 +12,7 @@ function Login({ setLoggedIn }) {
   const apiUrl = import.meta.env.VITE_API_URL;
   const url = `${apiUrl}v1/auth/login`;
 
-  console.log(error);
+  // console.log(error);
 
   const openSignUpForm = () => {
     setSignUpForm(!signUpForm);
@@ -39,7 +39,7 @@ function Login({ setLoggedIn }) {
   if (loggingIn) return <p>Logging In...</p>;
 
   if (response && response.user) {
-    // setLoggedIn(true);
+    setUser(response.user);
   }
 
   return (
