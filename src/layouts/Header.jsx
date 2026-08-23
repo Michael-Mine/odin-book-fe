@@ -17,7 +17,7 @@ function Header({ setUser }) {
 
   return (
     <div className={styles.header}>
-      <button>Home</button>
+      <button>Profile Pic</button>
       <h1>Mr Mine Odin-Book</h1>
       <button onClick={() => logout()}>Logout</button>
     </div>

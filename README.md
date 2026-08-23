@@ -188,7 +188,7 @@ npm run test
 2. Check default Build command is as:
 
 ```bash
-npm run dev
+npm run build
 ```
 
 3. Check default Publish directory is as `dist`

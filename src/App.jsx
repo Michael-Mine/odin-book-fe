@@ -16,7 +16,7 @@ function App() {
       {loading && <h2>Loading...</h2>}
       {error && <h2>Error loading user, please login again.</h2>}
       {user ? (
-        <Outlet context={[user, setUser]} />
+        <Outlet context={{ user, setUser }} />
       ) : (
         <Login setUser={setUser} />
       )}
