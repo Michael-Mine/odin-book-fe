@@ -5,12 +5,7 @@ import Sidebar from "../layouts/Sidebar";
 function Home() {
   const { user, setUser } = useOutletContext();
 
-  return (
-    <>
-      <Header setUser={setUser} />
-      <Sidebar />
-    </>
-  );
+  return <></>;
 }
 
 export default Home;

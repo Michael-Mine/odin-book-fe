@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import useUser from "./pages/useUser";
+import useUser from "./hooks/useUser";
 import Navbar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
 import "./styles/button.css";

@@ -1,4 +1,6 @@
 import { Navigate, Outlet, useLocation, useOutletContext } from "react-router";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
 
 function ProtectedLayout() {
   const { user, setUser, loading, error } = useOutletContext();
@@ -16,7 +18,13 @@ function ProtectedLayout() {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  return <Outlet context={{ user, setUser }} />;
+  return (
+    <>
+      <Header setUser={setUser} />
+      <Sidebar />
+      <Outlet context={{ user, setUser }} />;
+    </>
+  );
 }
 
 export default ProtectedLayout;

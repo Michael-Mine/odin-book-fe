@@ -4,9 +4,9 @@ function Sidebar() {
   return (
     <div className={styles.container}>
       <button>Home</button>
-      <button>Profile</button>
-      <button>Following</button>
       <button>New Post</button>
+      <button>Following</button>
+      <button>Profile</button>
     </div>
   );
 }
