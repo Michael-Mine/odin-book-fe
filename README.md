@@ -151,8 +151,6 @@ model Like {
 | GET    | /posts/:postCuid/likes            | Get users who liked a post             | Yes  |
 | POST   | /posts/:postCuid/likes            | Like a post                            | Yes  |
 
-Note: POST used instead of GET due to JWTs needed in request body for authentication.
-
 ## Local Development
 
 ### Setup
