@@ -1,7 +1,12 @@
 import { useState } from "react";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import SignUp from "./SignUp";
 
-function Login({ setUser }) {
+function Login() {
+  const { setUser } = useOutletContext();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [inputEmail, setInputEmail] = useState("");
   const [inputPass, setInputPass] = useState("");
   const [response, setResponse] = useState(null);
@@ -11,8 +16,7 @@ function Login({ setUser }) {
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const url = `${apiUrl}v1/auth/login`;
-
-  // console.log(error);
+  const destination = location.state?.from?.pathname ?? "/";
 
   const openSignUpForm = () => {
     setSignUpForm(!signUpForm);
@@ -21,6 +25,7 @@ function Login({ setUser }) {
   const sendLogin = () => {
     console.log("logging in");
     setLoggingIn(true);
+    setError(null);
 
     fetch(url, {
       method: "POST",
@@ -28,10 +33,24 @@ function Login({ setUser }) {
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ username: inputEmail, password: inputPass }),
+      body: JSON.stringify({
+        username: inputEmail,
+        password: inputPass,
+      }),
     })
-      .then((response) => response.json())
-      .then((response) => setResponse({ ...response }))
+      .then((httpResponse) => {
+        return httpResponse.json().then((data) => {
+          return { httpResponse, data };
+        });
+      })
+      .then(({ httpResponse, data }) => {
+        setResponse(data);
+
+        if (httpResponse.ok && data.user) {
+          setUser(data.user);
+          navigate(destination, { replace: true });
+        }
+      })
       .catch((error) => setError(error))
       .finally(() => setLoggingIn(false));
   };
@@ -46,6 +65,7 @@ function Login({ setUser }) {
     <div>
       <h1>Mr Mine Odin-Book</h1>
       <h2>Login to access</h2>
+
       <div className="input-container">
         <label htmlFor="username">Email:</label>
         <input
@@ -56,6 +76,7 @@ function Login({ setUser }) {
           value={inputEmail}
           onChange={(event) => setInputEmail(event.target.value)}
         />
+
         <label htmlFor="password">Password:</label>
         <input
           className="input-field"
@@ -66,10 +87,14 @@ function Login({ setUser }) {
           onChange={(event) => setInputPass(event.target.value)}
         />
       </div>
+
       <button onClick={sendLogin}>Login</button>
       <button onClick={openSignUpForm}>or Sign Up</button>
+
       {error && <p className="characters">A network error was encountered</p>}
-      {response && response.user && <p className="characters">Logged in</p>}
+      {response && !response.user && (
+        <p className="characters">Authentication failed</p>
+      )}
       {signUpForm && <SignUp />}
     </div>
   );

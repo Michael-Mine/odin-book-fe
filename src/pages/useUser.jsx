@@ -25,7 +25,7 @@ const useUser = () => {
         }
         return response.json();
       })
-      .then((response) => setUser(response.user ?? null))
+      .then((response) => setUser(response?.user ?? null))
       .catch((error) => {
         if (error.name !== "AbortError") {
           setError(error);
