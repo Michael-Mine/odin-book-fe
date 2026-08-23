@@ -1,11 +1,14 @@
 import { useOutletContext } from "react-router";
-import Header from "../layouts/Header";
-import Sidebar from "../layouts/Sidebar";
+import styles from "./Home.module.css";
 
 function Home() {
-  const { user, setUser } = useOutletContext();
+  const { user } = useOutletContext();
 
-  return <></>;
+  return (
+    <div className={styles.container}>
+      <h2>Home Feed for {user.name}</h2>
+    </div>
+  );
 }
 
 export default Home;

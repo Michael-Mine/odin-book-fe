@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation, useOutletContext } from "react-router";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import styles from "./ProtectedLayout.module.css";
 
 function ProtectedLayout() {
   const { user, setUser, loading, error } = useOutletContext();
@@ -21,8 +22,10 @@ function ProtectedLayout() {
   return (
     <>
       <Header setUser={setUser} />
-      <Sidebar />
-      <Outlet context={{ user, setUser }} />;
+      <div className={styles.container}>
+        <Sidebar />
+        <Outlet context={{ user, setUser }} />
+      </div>
     </>
   );
 }
