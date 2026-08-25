@@ -53,5 +53,6 @@ button:active:before {
 @media (prefers-color-scheme: dark) {
   button {
     color: white;
+    background-color: grey;
   }
 }

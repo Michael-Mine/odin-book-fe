@@ -5,7 +5,7 @@ import styles from "./Navbar.module.css";
 
 function Navbar() {
   return (
-    <nav>
+    <nav className={styles.container}>
       <a href="/">
         <img src={appIcon} className={styles.homeIcon} alt="Blog icon" />
       </a>

@@ -1,18 +1,30 @@
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 import styles from "./Sidebar.module.css";
 
 function Sidebar() {
+  const linkClass = ({ isActive }) =>
+    isActive ? `${styles.link} ${styles.active}` : styles.link;
+
   return (
-    <div className={styles.container}>
-      <Link to="/">
-        <button>Home</button>
-      </Link>
-      <Link to="/new-post">
-        <button>New Post</button>
-      </Link>
-      <button>Following</button>
-      <button>Profile</button>
-    </div>
+    <aside className={styles.container}>
+      <nav className={styles.navigation}>
+        <NavLink to="/" end className={linkClass}>
+          Home
+        </NavLink>
+
+        <NavLink to="/new-post" className={linkClass}>
+          New Post
+        </NavLink>
+
+        <NavLink to="/following" className={linkClass}>
+          Following
+        </NavLink>
+
+        <NavLink to="/profile" className={linkClass}>
+          Profile
+        </NavLink>
+      </nav>
+    </aside>
   );
 }
 
