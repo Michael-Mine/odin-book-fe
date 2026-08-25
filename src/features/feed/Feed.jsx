@@ -1,9 +1,8 @@
-import { useOutletContext } from "react-router";
 import styles from "./Feed.module.css";
 import useFeed from "./useFeed";
+import FeedItem from "./FeedItem";
 
 function Feed() {
-  const { user } = useOutletContext();
   const { feed, error, loading } = useFeed();
 
   if (loading) return <h2>Loading...</h2>;
@@ -11,7 +10,9 @@ function Feed() {
 
   return (
     <div className={styles.container}>
-      <h2>Home Feed for {user.name}</h2>
+      {feed.posts.map((post) => {
+        return <FeedItem post={post} key={post.cuid} />;
+      })}
     </div>
   );
 }
