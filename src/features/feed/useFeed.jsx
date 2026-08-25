@@ -10,7 +10,7 @@ const useFeed = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     console.log("getting feed");
 
-    fetch(`${apiUrl}v1/feed`, {
+    fetch(`${apiUrl}v1/posts/feed`, {
       method: "GET",
       credentials: "include",
       signal: controller.signal,

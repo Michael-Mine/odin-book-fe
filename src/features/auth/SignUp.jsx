@@ -34,8 +34,8 @@ function SignUp() {
       .finally(() => setSigningUp(false));
   };
 
-  if (signingUp) return <p>Signing Up...</p>;
-  if (response && response.user) return <p>User created</p>;
+  if (signingUp) return <h3>Signing Up...</h3>;
+  if (response && response.user) return <h3>User created</h3>;
 
   return (
     <div>

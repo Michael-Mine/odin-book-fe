@@ -34,9 +34,19 @@ function NewPost() {
       .finally(() => setSending(false));
   };
 
-  if (sending) return <h3>Sending...</h3>;
-  if (response && response.message === "post created")
-    return <h3>{response.message}</h3>;
+  if (sending)
+    return (
+      <div className={styles.container}>
+        <h3>Sending...</h3>
+      </div>
+    );
+
+  if (response && response.post)
+    return (
+      <div className={styles.container}>
+        <h3>Post created</h3>
+      </div>
+    );
 
   return (
     <div className={styles.container}>

@@ -3,7 +3,7 @@ import RouteErrorPage from "../pages/RouteErrorPage.jsx";
 import NotFound from "../pages/NotFound.jsx";
 import Login from "../features/auth/Login.jsx";
 import ProtectedLayout from "../layouts/ProtectedLayout.jsx";
-import Home from "../pages/Home.jsx";
+import Feed from "../features/feed/Feed.jsx";
 import NewPost from "../features/posts/NewPost.jsx";
 
 const routes = [
@@ -19,7 +19,7 @@ const routes = [
       {
         element: <ProtectedLayout />,
         children: [
-          { index: true, element: <Home /> },
+          { index: true, element: <Feed /> },
           { path: "new-post", element: <NewPost /> },
           // { path: "profile/:userCuid", element: <Profile/> },
           // { path: "following", element: <Following/> },
