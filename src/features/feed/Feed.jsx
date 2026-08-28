@@ -18,3 +18,5 @@ function Feed() {
 }
 
 export default Feed;
+
+//add pagination for 20+
