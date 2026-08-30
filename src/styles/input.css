@@ -69,3 +69,8 @@
 .characters {
   text-align: center;
 }
+
+.comment {
+  width: 700px;
+  height: 3rem;
+}

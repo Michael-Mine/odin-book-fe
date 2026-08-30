@@ -1,6 +1,7 @@
 import { useParams } from "react-router";
 import useComments from "./useComments";
 import CommentsItem from "./CommentsItem";
+import WriteComment from "./WriteComment";
 import styles from "./Comments.module.css";
 
 function Comments() {
@@ -15,6 +16,7 @@ function Comments() {
       {comments.map((comment) => {
         return <CommentsItem key={comment.cuid} comment={comment} />;
       })}
+      <WriteComment />
     </div>
   );
 }

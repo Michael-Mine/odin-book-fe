@@ -1,10 +1,10 @@
 import { useState } from "react";
-import styles from "./NewPost.module.css";
+import { useParams } from "react-router";
 
-function NewPost() {
+function WriteComment() {
+  let { postCuid } = useParams();
   const [formData, setFormData] = useState({
     content: "",
-    picURL: "",
   });
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -14,9 +14,9 @@ function NewPost() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const addPost = () => {
+  const handleSubmit = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    const url = `${apiUrl}v1/posts`;
+    const url = `${apiUrl}v1/posts/${postCuid}/comments`;
     setSending(true);
     setError(null);
 
@@ -34,47 +34,24 @@ function NewPost() {
       .finally(() => setSending(false));
   };
 
-  if (sending)
-    return (
-      <div className={styles.container}>
-        <h3>Sending...</h3>
-      </div>
-    );
+  if (sending) return <h3>Sending...</h3>;
 
-  if (response && response.post)
-    return (
-      <div className={styles.container}>
-        <h3>Post created</h3>
-      </div>
-    );
+  if (response && response.comment) return <h3>Comment created</h3>;
 
   return (
-    <div className={styles.container}>
-      <h2>New Post</h2>
-      <div className="input-container">
-        <label htmlFor="picURL">Picture URL:</label>
-        <input
-          className="input-field"
-          id="picURL"
-          name="picURL"
-          data-testid="picURL-input"
-          type="text"
-          value={formData.picURL}
-          onChange={handleChange}
-        />
-      </div>
+    <div>
       <textarea
-        className="input-field post"
+        className="input-field comment"
         data-testid="content-input"
         type="text"
         name="content"
-        placeholder="Write post"
+        placeholder="Add a comment"
         value={formData.content}
         onChange={handleChange}
-        maxLength="5000"
+        maxLength="1000"
       />
       <div>
-        <button onClick={addPost}>Add Post</button>
+        <button onClick={handleSubmit}>Add Comment</button>
       </div>
       {error && <h3>A network error was encountered</h3>}
       {response &&
@@ -86,4 +63,4 @@ function NewPost() {
   );
 }
 
-export default NewPost;
+export default WriteComment;
