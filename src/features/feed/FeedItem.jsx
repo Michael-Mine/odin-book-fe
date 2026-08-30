@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import PostHeader from "../posts/PostHeader";
+import LikeButton from "../likes/LikeButton";
 import styles from "./FeedItem.module.css";
 
 function FeedItem({ post }) {
@@ -18,7 +19,7 @@ function FeedItem({ post }) {
           <button onClick={() => setSeeMore(true)}>See more</button>
         </>
       )}
-      <button>{post.likeCount} Likes</button>
+      <LikeButton likeCount={post.likeCount} postCuid={post.cuid} />
       <Link to={postURL} className={styles.link}>
         {post.commentCount} Comments
       </Link>

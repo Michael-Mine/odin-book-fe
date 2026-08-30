@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router";
 import UsersLiked from "./UsersLiked";
+import LikeButton from "./LikeButton";
 
 function Likes({ likeCount }) {
   let { postCuid } = useParams();
@@ -24,7 +25,7 @@ function Likes({ likeCount }) {
 
   return (
     <>
-      <button>{likeCount} Likes</button>
+      <LikeButton likeCount={likeCount} postCuid={postCuid} />
       {showLikes && <UsersLiked likes={response?.likes} />}
       {likeCount > 0 && !showLikes && (
         <button onClick={getLikes}>Show Likes</button>
