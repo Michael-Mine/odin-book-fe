@@ -10,6 +10,7 @@ function Feed() {
 
   return (
     <div className={styles.container}>
+      <h2>Home Feed</h2>
       {feed.posts.map((post) => {
         return <FeedItem post={post} key={post.cuid} />;
       })}

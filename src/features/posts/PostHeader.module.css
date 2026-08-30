@@ -1,0 +1,11 @@
+.profileLink {
+  text-decoration: none;
+}
+
+.profileLink:hover {
+  text-decoration: underline;
+}
+
+.date {
+  margin-bottom: 5px;
+}
