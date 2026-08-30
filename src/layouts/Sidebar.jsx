@@ -16,12 +16,12 @@ function Sidebar() {
           New Post
         </NavLink>
 
-        <NavLink to="/following" className={linkClass}>
-          Following
-        </NavLink>
-
         <NavLink to="/profile" className={linkClass}>
           Profile
+        </NavLink>
+
+        <NavLink to="/following" className={linkClass}>
+          Following
         </NavLink>
       </nav>
     </aside>

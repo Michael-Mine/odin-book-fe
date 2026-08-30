@@ -11,6 +11,14 @@
   margin-bottom: 5px;
 }
 
+.profileLink {
+  text-decoration: none;
+}
+
+.profileLink:hover {
+  text-decoration: underline;
+}
+
 .link {
   --color: #783192;
   font-family: inherit;
