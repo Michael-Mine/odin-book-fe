@@ -2,6 +2,7 @@ import { useParams } from "react-router";
 import usePost from "./usePost";
 import PostHeader from "./PostHeader";
 import Comments from "../comments/Comments";
+import Likes from "../likes/Likes";
 import styles from "./PostPage.module.css";
 
 function PostPage() {
@@ -17,8 +18,7 @@ function PostPage() {
       <h2 className={styles.heading}>{post.author.name}'s Post</h2>
       <PostHeader post={post} />
       <p>{post.content}</p>
-      <button>{post.likeCount} Likes</button>
-      <button>Show Likes</button>
+      <Likes likeCount={post.likeCount} />
       <Comments />
     </div>
   );
