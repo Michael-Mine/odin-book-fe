@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
-const usePost = (postCuid) => {
-  const [post, setPost] = useState(null);
+const useComments = (postCuid) => {
+  const [comments, setComments] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("getting post");
+    console.log("getting comments");
 
-    fetch(`${apiUrl}v1/posts/${postCuid}`, {
+    fetch(`${apiUrl}v1/posts/${postCuid}/comments`, {
       method: "GET",
       credentials: "include",
       signal: controller.signal,
@@ -21,7 +21,7 @@ const usePost = (postCuid) => {
         }
         return response.json();
       })
-      .then((response) => setPost(response.post))
+      .then((response) => setComments(response.comments))
       .catch((error) => {
         if (error.name !== "AbortError") {
           setError(error);
@@ -38,7 +38,7 @@ const usePost = (postCuid) => {
     };
   }, [postCuid]);
 
-  return { post, error, loading };
+  return { comments, error, loading };
 };
 
-export default usePost;
+export default useComments;

@@ -1,9 +1,10 @@
 import { useParams } from "react-router";
 import usePost from "./usePost";
-import styles from "./ViewPost.module.css";
 import PostHeader from "./PostHeader";
+import Comments from "./Comments";
+import styles from "./PostPage.module.css";
 
-function ViewPost() {
+function PostPage() {
   let { postCuid } = useParams();
   const { post, error, loading } = usePost(postCuid);
 
@@ -16,10 +17,11 @@ function ViewPost() {
       <h2 className={styles.heading}>{post.author.name}'s Post</h2>
       <PostHeader post={post} />
       <p>{post.content}</p>
-      <button>{post.commentCount} Likes</button>
+      <button>{post.likeCount} Likes</button>
       <button>Show Likes</button>
+      <Comments />
     </div>
   );
 }
 
-export default ViewPost;
+export default PostPage;

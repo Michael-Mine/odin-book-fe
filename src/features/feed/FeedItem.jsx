@@ -18,7 +18,7 @@ function FeedItem({ post }) {
           <button onClick={() => setSeeMore(true)}>See more</button>
         </>
       )}
-      <button>{post.commentCount} Likes</button>
+      <button>{post.likeCount} Likes</button>
       <Link to={postURL} className={styles.link}>
         {post.commentCount} Comments
       </Link>
