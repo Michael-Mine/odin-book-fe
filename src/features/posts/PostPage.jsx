@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import usePost from "./usePost";
 import PostHeader from "./PostHeader";
-import Comments from "./Comments";
+import Comments from "../comments/Comments";
 import styles from "./PostPage.module.css";
 
 function PostPage() {
