@@ -23,8 +23,8 @@ function ProtectedLayout() {
     <>
       <Header setUser={setUser} />
       <div className={styles.container}>
-        <Sidebar />
-        <Outlet context={{ user, setUser }} />
+        <Sidebar user={user} />
+        <Outlet context={user} />
       </div>
     </>
   );

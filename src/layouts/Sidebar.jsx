@@ -1,7 +1,8 @@
 import { NavLink } from "react-router";
 import styles from "./Sidebar.module.css";
 
-function Sidebar() {
+function Sidebar({ user }) {
+  const profileURL = `/profile/${user.cuid}`;
   const linkClass = ({ isActive }) =>
     isActive ? `${styles.link} ${styles.active}` : styles.link;
 
@@ -16,12 +17,12 @@ function Sidebar() {
           New Post
         </NavLink>
 
-        <NavLink to="/profile" className={linkClass}>
-          Profile
+        <NavLink to="/following" className={linkClass}>
+          New Follows
         </NavLink>
 
-        <NavLink to="/following" className={linkClass}>
-          Following
+        <NavLink to={profileURL} className={linkClass}>
+          My Profile
         </NavLink>
       </nav>
     </aside>
