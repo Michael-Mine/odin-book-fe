@@ -1,6 +1,6 @@
 import { useOutletContext, useParams } from "react-router";
 import useProfile from "./useProfile";
-import styles from "./Profile.module.css";
+import styles from "./ProfilePage.module.css";
 
 function Profile() {
   let { userCuid } = useParams();

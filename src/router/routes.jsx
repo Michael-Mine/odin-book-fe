@@ -6,7 +6,7 @@ import ProtectedLayout from "../layouts/ProtectedLayout.jsx";
 import Feed from "../features/feed/Feed.jsx";
 import NewPost from "../features/posts/NewPost.jsx";
 import PostPage from "../features/posts/PostPage.jsx";
-import Profile from "../features/profiles/Profile.jsx";
+import ProfilePage from "../features/profile/ProfilePage.jsx";
 
 const routes = [
   {
@@ -24,7 +24,7 @@ const routes = [
           { index: true, element: <Feed /> },
           { path: "new-post", element: <NewPost /> },
           { path: "post/:postCuid", element: <PostPage /> },
-          { path: "profile/:userCuid", element: <Profile /> },
+          { path: "profile/:userCuid", element: <ProfilePage /> },
           // { path: "following", element: <Following/> },
         ],
       },
