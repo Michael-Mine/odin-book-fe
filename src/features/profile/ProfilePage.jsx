@@ -32,7 +32,7 @@ function Profile() {
       ) : (
         <p className={styles.aboutText}>Not updated</p>
       )}
-      <ProfileTabs userCuid={userCuid} />
+      <ProfileTabs key={userCuid} userCuid={userCuid} />
     </div>
   );
 }

@@ -1,5 +1,37 @@
+.activeTab {
+  background-color: #783192;
+  color: #fff;
+}
+
 .postsContainer {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.followContainer {
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.heading {
+  font-weight: 500;
+}
+
+.profileLink {
+  text-decoration: none;
+  color: black;
+}
+
+.profileLink:hover {
+  text-decoration: underline;
+}
+
+.emptyMessage {
+  width: 100%;
+  text-align: center;
 }
