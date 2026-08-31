@@ -13,12 +13,12 @@ function Sidebar({ user }) {
           Home
         </NavLink>
 
-        <NavLink to="/new-post" className={linkClass}>
-          New Post
+        <NavLink to="/new-follows" className={linkClass}>
+          New Follows
         </NavLink>
 
-        <NavLink to="/following" className={linkClass}>
-          New Follows
+        <NavLink to="/new-post" className={linkClass}>
+          New Post
         </NavLink>
 
         <NavLink to={profileURL} className={linkClass}>

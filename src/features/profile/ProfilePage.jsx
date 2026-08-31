@@ -1,24 +1,39 @@
-import { useOutletContext, useParams } from "react-router";
+import { useParams } from "react-router";
 import useProfile from "./useProfile";
 import styles from "./ProfilePage.module.css";
 
 function Profile() {
   let { userCuid } = useParams();
-  const { user } = useOutletContext();
-  // const { userProfile, error, loading } = useProfile(userCuid);
+  const { userProfile, error, loading } = useProfile(userCuid);
 
-  // if (loading) return <h2>Loading...</h2>;
-  // if (error) return <h2>A network error was encountered</h2>;
-  // if (!userProfile) return <h2>User not found</h2>;
+  if (loading) return <h2>Loading...</h2>;
+  if (error) return <h2>A network error was encountered</h2>;
+  if (!userProfile) return <h2>User not found</h2>;
 
   return (
     <div className={styles.container}>
-      <h2>userName Profile</h2>
-      <h2>Photo</h2>
-      <h2>Bio</h2>
-      <h2>Posts</h2>
-      <h2>Followers?</h2>
-      <h2>Following?</h2>
+      <h2>{userProfile.name} Profile</h2>
+      <h2>Photo + change if own</h2>
+      <p>
+        {userProfile.followerCount} Followers • {userProfile.followingCount}{" "}
+        Following{" "}
+      </p>
+      {userProfile.relationshipStatus == "accepted" && (
+        <p>You are following {userProfile.name}</p>
+      )}
+      {userProfile.relationshipStatus == "pending" && (
+        <p>Your follow request is pending with {userProfile.name}</p>
+      )}
+      {!userProfile.relationshipStatus && <button>Follow</button>}
+      <h3 className={styles.aboutHeading}>About + change if own</h3>
+      {userProfile.bio ? (
+        <p className={styles.aboutText}>{userProfile.bio}</p>
+      ) : (
+        <p className={styles.aboutText}>Not updated</p>
+      )}
+      <button>Posts</button>
+      <button>Followers</button>
+      <button>Following</button>
     </div>
   );
 }

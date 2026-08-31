@@ -7,6 +7,7 @@ import Feed from "../features/feed/Feed.jsx";
 import NewPost from "../features/posts/NewPost.jsx";
 import PostPage from "../features/posts/PostPage.jsx";
 import ProfilePage from "../features/profile/ProfilePage.jsx";
+import NewFollowsPage from "../features/follow/NewFollowsPage.jsx";
 
 const routes = [
   {
@@ -25,7 +26,7 @@ const routes = [
           { path: "new-post", element: <NewPost /> },
           { path: "post/:postCuid", element: <PostPage /> },
           { path: "profile/:userCuid", element: <ProfilePage /> },
-          // { path: "following", element: <Following/> },
+          { path: "new-follows", element: <NewFollowsPage /> },
         ],
       },
       {

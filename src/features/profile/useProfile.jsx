@@ -10,7 +10,7 @@ const useProfile = (userCuid) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     console.log("getting profile");
 
-    fetch(`${apiUrl}v1/user/${userCuid}`, {
+    fetch(`${apiUrl}v1/users/${userCuid}`, {
       method: "GET",
       credentials: "include",
       signal: controller.signal,
