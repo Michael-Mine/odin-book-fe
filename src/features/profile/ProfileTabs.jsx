@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
 import FeedItem from "../feed/FeedItem";
+import ProfileUserList from "./ProfileUserList";
 import styles from "./ProfileTabs.module.css";
 
 function ProfileTabs({ userCuid }) {
@@ -87,7 +87,10 @@ function ProfileTabs({ userCuid }) {
       tab: "followers",
       cachedResponse: followersResponse,
       endpoint: "followers",
-      saveResponse: (response) => setFollowersResponse(response.followers),
+      saveResponse: (response) =>
+        setFollowersResponse(
+          response.followers.map(({ follower }) => follower),
+        ),
     });
   };
 
@@ -96,7 +99,10 @@ function ProfileTabs({ userCuid }) {
       tab: "following",
       cachedResponse: followingResponse,
       endpoint: "following",
-      saveResponse: (response) => setFollowingResponse(response.following),
+      saveResponse: (response) =>
+        setFollowingResponse(
+          response.following.map(({ following }) => following),
+        ),
     });
   };
 
@@ -141,45 +147,21 @@ function ProfileTabs({ userCuid }) {
       </div>
 
       <div className={styles.followContainer}>
-        {activeTab === "followers" &&
-          followersResponse &&
-          (followersResponse.length > 0 ? (
-            <>
-              <span className={styles.heading}>Followers:</span>
+        {activeTab === "followers" && (
+          <ProfileUserList
+            heading="Followers"
+            users={followersResponse}
+            emptyMessage="No followers yet."
+          />
+        )}
 
-              {followersResponse.map((follower) => (
-                <Link
-                  to={`/profile/${follower.follower.cuid}`}
-                  key={follower.follower.cuid}
-                  className={styles.profileLink}
-                >
-                  <span>{follower.follower.name}</span>
-                </Link>
-              ))}
-            </>
-          ) : (
-            <p className={styles.emptyMessage}>No followers yet.</p>
-          ))}
-
-        {activeTab === "following" &&
-          followingResponse &&
-          (followingResponse.length > 0 ? (
-            <>
-              <span className={styles.heading}>Following:</span>
-
-              {followingResponse.map((following) => (
-                <Link
-                  to={`/profile/${following.following.cuid}`}
-                  key={following.following.cuid}
-                  className={styles.profileLink}
-                >
-                  <span>{following.following.name}</span>
-                </Link>
-              ))}
-            </>
-          ) : (
-            <p className={styles.emptyMessage}>Not following anyone yet.</p>
-          ))}
+        {activeTab === "following" && (
+          <ProfileUserList
+            heading="Following"
+            users={followingResponse}
+            emptyMessage="Not following anyone yet."
+          />
+        )}
       </div>
     </>
   );
