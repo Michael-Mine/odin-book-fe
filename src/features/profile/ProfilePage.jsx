@@ -1,5 +1,6 @@
 import { useParams } from "react-router";
 import useProfile from "./useProfile";
+import ProfileTabs from "./ProfileTabs";
 import styles from "./ProfilePage.module.css";
 
 function Profile() {
@@ -31,9 +32,7 @@ function Profile() {
       ) : (
         <p className={styles.aboutText}>Not updated</p>
       )}
-      <button>Posts</button>
-      <button>Followers</button>
-      <button>Following</button>
+      <ProfileTabs userCuid={userCuid} />
     </div>
   );
 }

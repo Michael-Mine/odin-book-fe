@@ -1,6 +1,6 @@
-import styles from "./Feed.module.css";
 import useFeed from "./useFeed";
 import FeedItem from "./FeedItem";
+import styles from "./Feed.module.css";
 
 function Feed() {
   const { feed, error, loading } = useFeed();
