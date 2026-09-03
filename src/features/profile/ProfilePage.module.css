@@ -6,6 +6,12 @@
   flex: 1;
 }
 
+.aboutContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .aboutHeading {
   text-align: left;
 }
