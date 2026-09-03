@@ -1,0 +1,13 @@
+.listContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.profileLink {
+  text-decoration: none;
+  color: black;
+}
+
+.profileLink:hover {
+  text-decoration: underline;
+}
