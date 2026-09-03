@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
-const useUsersToFollow = () => {
-  const [usersToFollow, setUsersToFollow] = useState(null);
+const useUsersFollowReceived = () => {
+  const [usersFollowReceived, setUsersFollowReceived] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("getting follow received");
+    console.log("getting users to follow");
 
-    fetch(`${apiUrl}v1/users`, {
+    fetch(`${apiUrl}v1/follow-requests/received`, {
       method: "GET",
       credentials: "include",
       signal: controller.signal,
@@ -21,7 +21,7 @@ const useUsersToFollow = () => {
         }
         return response.json();
       })
-      .then((response) => setUsersToFollow(response.users))
+      .then((response) => setUsersFollowReceived(response.users))
       .catch((error) => {
         if (error.name !== "AbortError") {
           setError(error);
@@ -38,7 +38,7 @@ const useUsersToFollow = () => {
     };
   }, []);
 
-  return { usersToFollow, error, loading };
+  return { usersFollowReceived, error, loading };
 };
 
-export default useUsersToFollow;
+export default useUsersFollowReceived;

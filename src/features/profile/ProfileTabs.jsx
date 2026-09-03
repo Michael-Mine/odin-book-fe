@@ -146,23 +146,25 @@ function ProfileTabs({ userCuid }) {
           ))}
       </div>
 
-      <div className={styles.followContainer}>
-        {activeTab === "followers" && (
+      {activeTab === "followers" && (
+        <div className={styles.followContainer}>
           <ProfileUserList
             heading="Followers"
             users={followersResponse}
             emptyMessage="No followers yet."
           />
-        )}
+        </div>
+      )}
 
-        {activeTab === "following" && (
+      {activeTab === "following" && (
+        <div className={styles.followContainer}>
           <ProfileUserList
             heading="Following"
             users={followingResponse}
             emptyMessage="Not following anyone yet."
           />
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }
