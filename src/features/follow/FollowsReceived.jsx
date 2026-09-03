@@ -1,20 +1,20 @@
 import { Link } from "react-router";
-import useUsersFollowReceived from "./useUsersFollowReceived";
+import useUsersFollowsReceived from "./useUsersFollowsReceived";
 import styles from "./FollowsReceived.module.css";
 
 function FollowsReceived() {
-  const { usersFollowReceived, error, loading } = useUsersFollowReceived();
+  const { usersFollowsReceived, error, loading } = useUsersFollowsReceived();
 
   if (loading) return <h2>Loading...</h2>;
   if (error) return <h2>A network error was encountered</h2>;
-  if (!usersFollowReceived) return <h2>Users not found</h2>;
-  if (usersFollowReceived === 0) return <h2>No New Follow Requests</h2>;
+  if (!usersFollowsReceived) return <h2>Users not found</h2>;
+  if (usersFollowsReceived === 0) return <h2>No New Follow Requests</h2>;
 
   return (
     <>
       <h2>New Follow Requests</h2>
       <div className={styles.listContainer}>
-        {usersFollowReceived.map((user) => (
+        {usersFollowsReceived.map((user) => (
           <div>
             <Link
               to={`/profile/${user.cuid}`}

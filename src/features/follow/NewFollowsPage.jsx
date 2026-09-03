@@ -1,12 +1,13 @@
 import FollowsReceived from "./FollowsReceived";
-import styles from "./NewFollowsPage.module.css";
+import FollowsSent from "./FollowsSent";
 import UserList from "./UserList";
+import styles from "./NewFollowsPage.module.css";
 
 function NewFollowsPage() {
   return (
     <div className={styles.container}>
       <FollowsReceived />
-      <h2>show pending requests sent + button to cancel</h2>
+      <FollowsSent />
       <UserList />
     </div>
   );
