@@ -8,7 +8,7 @@ function FollowsSent() {
   if (loading) return <h2>Loading...</h2>;
   if (error) return <h2>A network error was encountered</h2>;
   if (!usersFollowsSent) return <h2>Users not found</h2>;
-  if (usersFollowsSent === 0) return <h2>No Follows Sent Pending</h2>;
+  if (usersFollowsSent.length === 0) return <h2>No Pending Follows Sent</h2>;
 
   return (
     <>

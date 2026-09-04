@@ -132,24 +132,25 @@ model Like {
 | POST   | /auth/login                       | Log in and create a session            | No   |
 | POST   | /auth/logout                      | End the current session                | No   |
 | GET    | /auth/session                     | Return the logged-in user              | No   |
-| GET    | /users                            | Search or list users                   | Yes  |
-| PUT    | /users/me                         | Update a user's profile                | Yes  |
-| GET    | /users/:userCuid                  | Get a user's profile                   | Yes  |
-| GET    | /users/:userCuid/posts            | Get a user's posts                     | Yes  |
-| GET    | /users/:userCuid/followers        | Get a user's followers                 | Yes  |
-| GET    | /users/:userCuid/following        | Get users they follow                  | Yes  |
-| POST   | /users/:userCuid/follow           | Sends a follow request                 | Yes  |
-| POST   | /follow-requests/:userCuid/accept | Accept a request                       | Yes  |
-| DELETE | /follow-requests/:userCuid        | Reject or cancel a request             | Yes  |
-| GET    | /follow-requests/received         | Get received requests                  | Yes  |
-| GET    | /follow-requests/sent             | Get sent requests                      | Yes  |
-| GET    | /feed                             | Get posts from user and followed users | Yes  |
-| GET    | /posts/:postCuid                  | Get one post                           | Yes  |
 | POST   | /posts                            | Create a post                          | Yes  |
+| GET    | /posts/feed                       | Get posts from user and followed users | Yes  |
+| GET    | /posts/:postCuid                  | Get one post                           | Yes  |
 | GET    | /posts/:postCuid/comments         | Get a post's comments                  | Yes  |
 | POST   | /posts/:postCuid/comments         | Create a comment                       | Yes  |
 | GET    | /posts/:postCuid/likes            | Get users who liked a post             | Yes  |
 | POST   | /posts/:postCuid/likes            | Like a post                            | Yes  |
+| GET    | /users/:userCuid                  | Get a user's profile                   | Yes  |
+| GET    | /users/:userCuid/posts            | Get a user's posts                     | Yes  |
+| GET    | /users/:userCuid/followers        | Get a user's followers                 | Yes  |
+| GET    | /users/:userCuid/following        | Get users they follow                  | Yes  |
+| PUT    | /users/me                         | Update a user's profile                | Yes  |
+| GET    | /users                            | List users not followed                | Yes  |
+| GET    | /follow-requests/received         | Get received requests                  | Yes  |
+| GET    | /follow-requests/sent             | Get sent requests                      | Yes  |
+| POST   | /follow-requests/:userCuid        | Sends a follow request                 | Yes  |
+| DELETE | /follow-requests/:userCuid        | Cancels a follow request               | Yes  |
+| POST   | /follow-requests/:userCuid/accept | Accept a request                       | Yes  |
+| POST   | /follow-requests/:userCuid/reject | Reject a request                       | Yes  |
 
 ## Local Development
 

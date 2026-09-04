@@ -8,7 +8,8 @@ function FollowsReceived() {
   if (loading) return <h2>Loading...</h2>;
   if (error) return <h2>A network error was encountered</h2>;
   if (!usersFollowsReceived) return <h2>Users not found</h2>;
-  if (usersFollowsReceived === 0) return <h2>No New Follow Requests</h2>;
+  if (usersFollowsReceived.length === 0)
+    return <h2>No Pending Follows Received</h2>;
 
   return (
     <>
@@ -25,7 +26,6 @@ function FollowsReceived() {
             </Link>
             <button>Accept</button>
             <button>Reject</button>
-            <button>Block</button>
           </div>
         ))}
       </div>
