@@ -12,12 +12,15 @@ function Comments() {
   if (error) return <h2>A network error was encountered</h2>;
 
   return (
-    <div className={styles.container}>
-      {comments.map((comment) => {
-        return <CommentsItem key={comment.cuid} comment={comment} />;
-      })}
-      <WriteComment />
-    </div>
+    <>
+      <h3 className={styles.heading}>Comments</h3>
+      <div className={styles.container}>
+        {comments.map((comment) => {
+          return <CommentsItem key={comment.cuid} comment={comment} />;
+        })}
+        <WriteComment />
+      </div>
+    </>
   );
 }
 

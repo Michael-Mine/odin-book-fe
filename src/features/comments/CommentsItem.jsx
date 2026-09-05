@@ -9,6 +9,9 @@ function CommentsItem({ comment }) {
   return (
     <div className={styles.container}>
       <div className={styles.heading}>
+        <div>
+          <img src={comment.author.picURL} alt="profile pic" />
+        </div>
         <Link to={profileURL} className={styles.profileLink}>
           <p>{comment.author.name}</p>
         </Link>

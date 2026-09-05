@@ -32,14 +32,17 @@ function Profile() {
         className={styles.profilePic}
         alt="profile pic"
       />
-      {userProfile.isOwnProfile && (
-        <p>Use Gravatar to update your profile picture</p>
-      )}
 
       <p>
         {userProfile.followerCount} Followers • {userProfile.followingCount}{" "}
         Following{" "}
       </p>
+
+      {userProfile.isOwnProfile && (
+        <p className={styles.gravatarText}>
+          Use Gravatar to update your profile picture
+        </p>
+      )}
 
       {userProfile.relationshipStatus === "ACCEPTED" && (
         <UnfollowButton userCuid={userCuid} />
