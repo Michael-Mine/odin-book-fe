@@ -14,9 +14,12 @@ function FollowsSent() {
   return (
     <>
       <h2>Pending Follows Sent</h2>
-      <div className={styles.listContainer}>
+      <div>
         {usersFollowsSent.map((user) => (
-          <div>
+          <div className={styles.listItemContainer}>
+            <div>
+              <img src={user.picURL} alt="profile pic" />
+            </div>
             <Link
               to={`/profile/${user.cuid}`}
               key={user.cuid}

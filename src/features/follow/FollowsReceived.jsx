@@ -18,7 +18,10 @@ function FollowsReceived() {
       <h2>New Follow Requests</h2>
       <div className={styles.listContainer}>
         {usersFollowsReceived.map((user) => (
-          <div>
+          <div className={styles.listItemContainer}>
+            <div>
+              <img src={user.picURL} alt="profile pic" />
+            </div>
             <Link
               to={`/profile/${user.cuid}`}
               key={user.cuid}

@@ -44,7 +44,7 @@ function Profile() {
       {userProfile.relationshipStatus === "ACCEPTED" && (
         <UnfollowButton userCuid={userCuid} />
       )}
-      {!userProfile.relationshipStatus && (
+      {!userProfile.isOwnProfile && !userProfile.relationshipStatus && (
         <FollowRequestButton userCuid={userCuid} />
       )}
 

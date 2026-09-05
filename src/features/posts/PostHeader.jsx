@@ -8,16 +8,24 @@ function PostHeader({ post }) {
 
   return (
     <div className={styles.container}>
-      <Link to={profileURL} className={styles.profileLink}>
-        <h2>{post.author.name}</h2>
-      </Link>
-      <b>
-        <p className={styles.date}>
-          {date.toDateString() +
-            " at " +
-            date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-        </p>
-      </b>
+      <div>
+        <img src={post.author.picURL} alt="profile pic" />
+      </div>
+      <div>
+        <Link to={profileURL} className={styles.profileLink}>
+          <h2>{post.author.name}</h2>
+        </Link>
+        <b>
+          <p className={styles.date}>
+            {date.toDateString() +
+              " at " +
+              date.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+          </p>
+        </b>
+      </div>
     </div>
   );
 }

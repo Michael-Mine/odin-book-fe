@@ -15,7 +15,10 @@ function UserList() {
       <h2>Find People to Connect</h2>
       <div className={styles.listContainer}>
         {usersToFollow.map((user) => (
-          <div>
+          <div className={styles.listItemContainer}>
+            <div>
+              <img src={user.picURL} alt="profile pic" />
+            </div>
             <Link
               to={`/profile/${user.cuid}`}
               key={user.cuid}
