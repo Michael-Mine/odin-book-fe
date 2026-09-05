@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import styles from "./ProfileTabs.module.css";
+import styles from "./ProfileUserList.module.css";
 
 function ProfileUserList({ heading, users, emptyMessage }) {
   if (!users) return null;

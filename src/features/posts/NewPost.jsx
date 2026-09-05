@@ -51,7 +51,7 @@ function NewPost() {
   return (
     <div className={styles.container}>
       <h2>New Post</h2>
-      <div className="input-container">
+      {/* <div className="input-container">
         <label htmlFor="picURL">Picture URL:</label>
         <input
           className="input-field"
@@ -62,7 +62,7 @@ function NewPost() {
           value={formData.picURL}
           onChange={handleChange}
         />
-      </div>
+      </div> */}
       <textarea
         className="input-field post"
         data-testid="content-input"

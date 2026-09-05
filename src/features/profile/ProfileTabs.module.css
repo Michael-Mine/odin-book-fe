@@ -9,6 +9,11 @@
   gap: 20px;
 }
 
+.emptyMessage {
+  width: 100%;
+  text-align: center;
+}
+
 .followContainer {
   padding: 10px;
   background-color: #ffffff;
@@ -16,22 +21,4 @@
   margin-bottom: 20px;
   display: flex;
   gap: 10px;
-}
-
-.heading {
-  font-weight: 500;
-}
-
-.profileLink {
-  text-decoration: none;
-  color: black;
-}
-
-.profileLink:hover {
-  text-decoration: underline;
-}
-
-.emptyMessage {
-  width: 100%;
-  text-align: center;
 }

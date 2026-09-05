@@ -62,8 +62,11 @@
 /* Copyright - 2026 Allyhere (Camilo Micheletto )  */
 
 .post {
-  width: 700px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 700px;
   height: 30rem;
+  resize: vertical;
 }
 
 .characters {

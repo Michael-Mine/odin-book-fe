@@ -1,0 +1,17 @@
+.emptyMessage {
+  width: 100%;
+  text-align: center;
+}
+
+.heading {
+  font-weight: 500;
+}
+
+.profileLink {
+  text-decoration: none;
+  color: black;
+}
+
+.profileLink:hover {
+  text-decoration: underline;
+}
