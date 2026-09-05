@@ -12,7 +12,12 @@ function ProtectedLayout() {
   }
 
   if (error) {
-    return <h2>Unable to check your session. Please try again.</h2>;
+    return (
+      <h2>
+        Unable to check your session. Please try again or delete Odin-book.sid
+        cookie.
+      </h2>
+    );
   }
 
   if (!user) {
@@ -21,7 +26,7 @@ function ProtectedLayout() {
 
   return (
     <>
-      <Header setUser={setUser} />
+      <Header user={user} setUser={setUser} />
       <div className={styles.container}>
         <Sidebar user={user} />
         <Outlet context={user} />

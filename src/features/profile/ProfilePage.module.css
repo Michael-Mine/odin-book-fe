@@ -6,6 +6,10 @@
   flex: 1;
 }
 
+.profilePic {
+  padding: 10px;
+}
+
 .aboutContainer {
   display: flex;
   justify-content: space-between;

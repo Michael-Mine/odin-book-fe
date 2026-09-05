@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router";
 import useProfile from "./useProfile";
+import UnfollowButton from "../follow/UnfollowButton";
 import FollowRequestButton from "../follow/FollowRequestButton";
 import AboutEdit from "./AboutEdit";
 import ProfileTabs from "./ProfileTabs";
@@ -18,17 +19,30 @@ function Profile() {
   return (
     <div className={styles.container}>
       <h2>{userProfile.name} Profile</h2>
+
       {userProfile.relationshipStatus === "ACCEPTED" && (
         <p>You are following {userProfile.name}</p>
       )}
-      <h2>Photo + change if own</h2>
+      {userProfile.relationshipStatus === "PENDING" && (
+        <p>Your follow request is pending with {userProfile.name}</p>
+      )}
+
+      <img
+        src={userProfile.picURL}
+        className={styles.profilePic}
+        alt="profile pic"
+      />
+      {userProfile.isOwnProfile && (
+        <p>Use Gravatar to update your profile picture</p>
+      )}
+
       <p>
         {userProfile.followerCount} Followers • {userProfile.followingCount}{" "}
         Following{" "}
       </p>
 
-      {userProfile.relationshipStatus === "PENDING" && (
-        <p>Your follow request is pending with {userProfile.name}</p>
+      {userProfile.relationshipStatus === "ACCEPTED" && (
+        <UnfollowButton userCuid={userCuid} />
       )}
       {!userProfile.relationshipStatus && (
         <FollowRequestButton userCuid={userCuid} />

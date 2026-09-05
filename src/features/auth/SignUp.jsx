@@ -40,6 +40,8 @@ function SignUp() {
   return (
     <div>
       <h4>Sign Up Form</h4>
+      <p>This app uses your profile picture with Gravatar from your email.</p>
+      <p>If you do not have a Gravatar account, you can create one for free.</p>
       <div className="input-container">
         <label htmlFor="name">Name:</label>
         <input
