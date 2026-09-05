@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useParams } from "react-router";
 import useProfile from "./useProfile";
+import FollowRequestButton from "../follow/FollowRequestButton";
+import AboutEdit from "./AboutEdit";
 import ProfileTabs from "./ProfileTabs";
 import styles from "./ProfilePage.module.css";
-import AboutEdit from "./AboutEdit";
 
 function Profile() {
   let { userCuid } = useParams();
@@ -29,7 +30,9 @@ function Profile() {
       {userProfile.relationshipStatus == "pending" && (
         <p>Your follow request is pending with {userProfile.name}</p>
       )}
-      {!userProfile.relationshipStatus && <button>Follow</button>}
+      {!userProfile.relationshipStatus && (
+        <FollowRequestButton userCuid={userCuid} />
+      )}
 
       <div className={styles.aboutContainer}>
         <h3 className={styles.aboutHeading}>About</h3>

@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import useUsersToFollow from "./useUsersToFollow";
+import FollowRequestButton from "./FollowRequestButton";
 import styles from "./UserList.module.css";
 
 function UserList() {
@@ -22,7 +23,7 @@ function UserList() {
             >
               <span>{user.name}</span>
             </Link>
-            <button>Follow</button>
+            <FollowRequestButton userCuid={user.cuid} />
           </div>
         ))}
       </div>
