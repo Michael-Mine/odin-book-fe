@@ -24,10 +24,10 @@ function Profile() {
         Following{" "}
       </p>
 
-      {userProfile.relationshipStatus == "accepted" && (
+      {userProfile.relationshipStatus === "ACCEPTED" && (
         <p>You are following {userProfile.name}</p>
       )}
-      {userProfile.relationshipStatus == "pending" && (
+      {userProfile.relationshipStatus === "PENDING" && (
         <p>Your follow request is pending with {userProfile.name}</p>
       )}
       {!userProfile.relationshipStatus && (

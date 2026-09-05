@@ -1,16 +1,16 @@
 import { useState } from "react";
-import styles from "./FollowRequestButton.module.css";
+import styles from "./FollowCancelButton.module.css";
 
-function FollowRequestButton({ userCuid }) {
+function FollowCancelButton({ userCuid }) {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
 
-  const submitFollow = () => {
+  const submitCancel = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("submitting follow");
+    console.log("submitting cancel");
 
     fetch(`${apiUrl}v1/follow-requests/${userCuid}`, {
-      method: "POST",
+      method: "DELETE",
       credentials: "include",
     })
       .then((response) => response.json())
@@ -20,10 +20,10 @@ function FollowRequestButton({ userCuid }) {
 
   if (error) return <h2>A network error was encountered</h2>;
   if (response && response.follow)
-    return <button className={styles.requested}>Requested</button>;
+    return <button className={styles.cancelled}>Cancelled</button>;
   if (response && response.message) return <p>{response.message}</p>;
 
-  return <button onClick={submitFollow}>Follow</button>;
+  return <button onClick={submitCancel}>Cancel</button>;
 }
 
-export default FollowRequestButton;
+export default FollowCancelButton;

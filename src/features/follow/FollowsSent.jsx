@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import useUsersFollowsSent from "./useUsersFollowsSent";
+import FollowCancelButton from "./FollowCancelButton";
 import styles from "./FollowsSent.module.css";
 
 function FollowsSent() {
@@ -12,7 +13,7 @@ function FollowsSent() {
 
   return (
     <>
-      <h2>New Follow Requests</h2>
+      <h2>Pending Follows Sent</h2>
       <div className={styles.listContainer}>
         {usersFollowsSent.map((user) => (
           <div>
@@ -23,7 +24,7 @@ function FollowsSent() {
             >
               <span>{user.name}</span>
             </Link>
-            <button>Cancel</button>
+            <FollowCancelButton userCuid={user.cuid} />
           </div>
         ))}
       </div>

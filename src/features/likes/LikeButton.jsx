@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from "./LikeButton.module.css";
 
 function LikeButton({ likeCount, postCuid }) {
   const [response, setResponse] = useState(null);
@@ -18,7 +19,8 @@ function LikeButton({ likeCount, postCuid }) {
   };
 
   if (error) return <h2>A network error was encountered</h2>;
-  if (response && response.like) return <button>Liked</button>;
+  if (response && response.like)
+    return <button className={styles.liked}>Liked</button>;
 
   if (likeCount == 1) return <button onClick={submitLike}>1 Like</button>;
 
