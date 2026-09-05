@@ -18,15 +18,15 @@ function Profile() {
   return (
     <div className={styles.container}>
       <h2>{userProfile.name} Profile</h2>
+      {userProfile.relationshipStatus === "ACCEPTED" && (
+        <p>You are following {userProfile.name}</p>
+      )}
       <h2>Photo + change if own</h2>
       <p>
         {userProfile.followerCount} Followers • {userProfile.followingCount}{" "}
         Following{" "}
       </p>
 
-      {userProfile.relationshipStatus === "ACCEPTED" && (
-        <p>You are following {userProfile.name}</p>
-      )}
       {userProfile.relationshipStatus === "PENDING" && (
         <p>Your follow request is pending with {userProfile.name}</p>
       )}

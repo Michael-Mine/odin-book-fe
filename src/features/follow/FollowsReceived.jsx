@@ -1,6 +1,8 @@
 import { Link } from "react-router";
 import useUsersFollowsReceived from "./useUsersFollowsReceived";
 import styles from "./FollowsReceived.module.css";
+import FollowAcceptButton from "./FollowAcceptButton";
+import FollowRejectButton from "./FollowRejectButton";
 
 function FollowsReceived() {
   const { usersFollowsReceived, error, loading } = useUsersFollowsReceived();
@@ -24,8 +26,8 @@ function FollowsReceived() {
             >
               <span>{user.name}</span>
             </Link>
-            <button>Accept</button>
-            <button>Reject</button>
+            <FollowAcceptButton userCuid={user.cuid} />
+            <FollowRejectButton userCuid={user.cuid} />
           </div>
         ))}
       </div>
