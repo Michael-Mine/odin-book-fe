@@ -1,9 +1,12 @@
 .container {
+  position: sticky;
+  top: 10px;
   padding: 20px;
   background-color: #e6e6e6;
   border-radius: 20px;
   min-height: 500px;
   box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+  height: 500px;
 }
 
 .navigation {
