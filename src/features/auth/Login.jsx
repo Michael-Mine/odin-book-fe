@@ -13,16 +13,21 @@ function Login() {
   const [error, setError] = useState(null);
   const [loggingIn, setLoggingIn] = useState(false);
   const [signUpForm, setSignUpForm] = useState(false);
-
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const url = `${apiUrl}v1/auth/login`;
-  const destination = location.state?.from?.pathname ?? "/";
+  const guestEmail = import.meta.env.VITE_GUEST_EMAIL;
+  const guestPass = import.meta.env.VITE_GUEST_PASS;
+  console.log(guestEmail);
+  console.log(guestPass);
 
   const openSignUpForm = () => {
     setSignUpForm(!signUpForm);
   };
 
-  const sendLogin = () => {
+  const sendLogin = (email, pass) => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    console.log(apiUrl);
+
+    const url = `${apiUrl}v1/auth/login`;
+    const destination = location.state?.from?.pathname ?? "/";
     console.log("logging in");
     setLoggingIn(true);
     setError(null);
@@ -34,8 +39,8 @@ function Login() {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        username: inputEmail,
-        password: inputPass,
+        username: email,
+        password: pass,
       }),
     })
       .then((httpResponse) => {
@@ -88,9 +93,13 @@ function Login() {
         />
       </div>
 
-      <button onClick={sendLogin}>Login</button>
+      <button onClick={() => sendLogin(inputEmail, inputPass)}>Login</button>
       <button onClick={openSignUpForm}>or Sign Up</button>
-
+      <button onClick={() => sendLogin(guestEmail, guestPass)}>
+        {" "}
+        Guest Login
+      </button>
+      <p>Use Guest Login to view the app without signing up!</p>
       {error && <p className="characters">A network error was encountered</p>}
       {response && !response.user && (
         <p className="characters">Authentication failed</p>
