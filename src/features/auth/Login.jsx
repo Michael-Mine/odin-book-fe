@@ -15,20 +15,13 @@ function Login() {
   const [signUpForm, setSignUpForm] = useState(false);
   const guestEmail = import.meta.env.VITE_GUEST_EMAIL;
   const guestPass = import.meta.env.VITE_GUEST_PASS;
-  console.log(guestEmail);
-  console.log(guestPass);
-
-  const openSignUpForm = () => {
-    setSignUpForm(!signUpForm);
-  };
 
   const sendLogin = (email, pass) => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log(apiUrl);
-
     const url = `${apiUrl}v1/auth/login`;
     const destination = location.state?.from?.pathname ?? "/";
-    console.log("logging in");
+
+    if (loggingIn) return;
     setLoggingIn(true);
     setError(null);
 
@@ -94,7 +87,9 @@ function Login() {
       </div>
 
       <button onClick={() => sendLogin(inputEmail, inputPass)}>Login</button>
-      <button onClick={openSignUpForm}>or Sign Up</button>
+      <button onClick={() => setSignUpForm((current) => !current)}>
+        or Sign Up
+      </button>
       <button onClick={() => sendLogin(guestEmail, guestPass)}>
         {" "}
         Guest Login

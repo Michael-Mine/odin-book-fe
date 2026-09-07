@@ -5,14 +5,14 @@ import Login from "./Login";
 
 describe("Login component", () => {
   it("renders heading, buttons, inputs", () => {
-    const { container } = render(<Login setLoggedIn={() => {}} />);
+    const { container } = render(<Login />);
 
     expect(container).toMatchSnapshot();
   });
 
   it("email input value is updated correctly", async () => {
     const user = userEvent.setup();
-    render(<Login setLoggedIn={() => {}} />);
+    render(<Login />);
 
     const input = screen.getByTestId("username-input");
 
@@ -23,7 +23,7 @@ describe("Login component", () => {
 
   it("password input value is updated correctly", async () => {
     const user = userEvent.setup();
-    render(<Login setLoggedIn={() => {}} />);
+    render(<Login />);
 
     const input = screen.getByTestId("password-input");
 
@@ -34,7 +34,7 @@ describe("Login component", () => {
 
   it("logging in text is shown while API request is in progress", async () => {
     const user = userEvent.setup();
-    render(<Login setLoggedIn={() => {}} />);
+    render(<Login />);
 
     const login = screen.getByRole("button", { name: "Login" });
     await user.click(login);
@@ -53,7 +53,7 @@ describe("Login component", () => {
     });
     const setLoggedIn = vi.fn();
     const user = userEvent.setup();
-    render(<Login setLoggedIn={setLoggedIn} />);
+    render(<Login />);
 
     const login = screen.getByRole("button", { name: "Login" });
     await user.click(login);
@@ -70,7 +70,7 @@ describe("Login component", () => {
       });
     });
     const user = userEvent.setup();
-    render(<Login setLoggedIn={() => {}} />);
+    render(<Login />);
 
     const login = screen.getByRole("button", { name: "Login" });
     await user.click(login);
@@ -89,7 +89,7 @@ describe("Login component", () => {
     });
 
     const user = userEvent.setup();
-    render(<Login setLoggedIn={() => {}} />);
+    render(<Login />);
 
     const login = screen.getByRole("button", { name: "Login" });
     await user.click(login);
