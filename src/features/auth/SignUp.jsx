@@ -75,7 +75,7 @@ function SignUp() {
           value={formData.password}
           onChange={handleChange}
         />
-        <label htmlFor="password-confirm">Password Confirm:</label>
+        <label htmlFor="passwordCheck">Password Confirm:</label>
         <input
           className="input-field"
           id="passwordCheck"
@@ -91,7 +91,11 @@ function SignUp() {
       {response &&
         response.errors &&
         response.errors.map((error) => {
-          return <p className="characters">{error.message}</p>;
+          return (
+            <p className="characters" key={`${error.field}-${error.message}`}>
+              {error.message}
+            </p>
+          );
         })}
     </div>
   );

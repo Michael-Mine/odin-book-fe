@@ -59,7 +59,7 @@ exports[`SignUp component > renders heading, inputs & button 1`] = `
         value=""
       />
       <label
-        for="password-confirm"
+        for="passwordCheck"
       >
         Password Confirm:
       </label>

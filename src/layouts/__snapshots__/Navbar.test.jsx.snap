@@ -2,7 +2,9 @@
 
 exports[`NavBar component > renders 3 links with logos 1`] = `
 <div>
-  <nav>
+  <nav
+    class="_container_59eb5c"
+  >
     <a
       href="/"
     >
