@@ -1,0 +1,80 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SignUp component > renders heading, inputs & button 1`] = `
+<div>
+  <div>
+    <h4>
+      Sign Up Form
+    </h4>
+    <p>
+      This app uses your profile picture with Gravatar from your email.
+    </p>
+    <p>
+      If you do not have a Gravatar account, you can create one for free.
+    </p>
+    <div
+      class="input-container"
+    >
+      <label
+        for="name"
+      >
+        Name:
+      </label>
+      <input
+        class="input-field"
+        data-testid="name-input"
+        id="name"
+        name="name"
+        type="text"
+        value=""
+      />
+      <label
+        for="username"
+      >
+        Email:
+      </label>
+      <input
+        class="input-field"
+        data-testid="username-input"
+        id="username"
+        name="username"
+        type="email"
+        value=""
+      />
+    </div>
+    <div
+      class="input-container"
+    >
+      <label
+        for="password"
+      >
+        Password:
+      </label>
+      <input
+        class="input-field"
+        data-testid="password-input"
+        id="password"
+        name="password"
+        type="password"
+        value=""
+      />
+      <label
+        for="password-confirm"
+      >
+        Password Confirm:
+      </label>
+      <input
+        class="input-field"
+        data-testid="passwordCheck"
+        id="passwordCheck"
+        name="passwordCheck"
+        type="password"
+        value=""
+      />
+    </div>
+    <button>
+      Sign Up
+    </button>
+  </div>
+</div>
+`;
