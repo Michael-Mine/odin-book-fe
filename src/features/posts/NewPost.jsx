@@ -19,6 +19,7 @@ function NewPost() {
     const url = `${apiUrl}v1/posts`;
     setSending(true);
     setError(null);
+    setResponse(null);
 
     fetch(url, {
       method: "POST",
@@ -28,8 +29,15 @@ function NewPost() {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => response.json())
-      .then((response) => setResponse({ ...response }))
+      .then((response) => {
+        return response.json().then((data) => {
+          if (!response.ok && !data.errors) {
+            throw new Error(data.message || "Failed to create post");
+          }
+
+          setResponse(data);
+        });
+      })
       .catch((error) => setError(error))
       .finally(() => setSending(false));
   };
@@ -76,7 +84,7 @@ function NewPost() {
       <div>
         <button onClick={addPost}>Add Post</button>
       </div>
-      {error && <h3>A network error was encountered</h3>}
+      {error && <h3 role="alert">{error.message}</h3>}
       {response &&
         response.errors &&
         response.errors.map((error) => {
