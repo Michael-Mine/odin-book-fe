@@ -11,16 +11,24 @@ function Likes({ likeCount }) {
 
   const getLikes = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("getting likes");
+    setError(null);
 
     fetch(`${apiUrl}v1/posts/${postCuid}/likes`, {
       method: "GET",
       credentials: "include",
     })
-      .then((response) => response.json())
-      .then((response) => setResponse({ ...response }))
-      .catch((error) => setError(error))
-      .finally(() => setShowLikes(true));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+
+        return response.json();
+      })
+      .then((response) => {
+        setResponse(response);
+        setShowLikes(true);
+      })
+      .catch((error) => setError(error));
   };
 
   return (
