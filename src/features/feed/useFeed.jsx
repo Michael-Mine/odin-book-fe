@@ -8,7 +8,6 @@ const useFeed = () => {
   useEffect(() => {
     const controller = new AbortController();
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("getting feed");
 
     fetch(`${apiUrl}v1/posts/feed`, {
       method: "GET",
