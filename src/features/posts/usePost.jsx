@@ -4,11 +4,18 @@ const usePost = (postCuid) => {
   const [post, setPost] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [previousPostCuid, setPreviousPostCuid] = useState(postCuid);
+
+  if (postCuid !== previousPostCuid) {
+    setPreviousPostCuid(postCuid);
+    setPost(null);
+    setError(null);
+    setLoading(true);
+  }
 
   useEffect(() => {
     const controller = new AbortController();
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("getting post");
 
     fetch(`${apiUrl}v1/posts/${postCuid}`, {
       method: "GET",
