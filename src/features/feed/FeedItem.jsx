@@ -28,5 +28,3 @@ function FeedItem({ post }) {
 }
 
 export default FeedItem;
-
-// add post pics?
