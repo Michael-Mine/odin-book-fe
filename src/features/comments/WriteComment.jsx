@@ -17,8 +17,9 @@ function WriteComment() {
   const handleSubmit = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const url = `${apiUrl}v1/posts/${postCuid}/comments`;
-    setSending(true);
+    setResponse(null);
     setError(null);
+    setSending(true);
 
     fetch(url, {
       method: "POST",
@@ -28,8 +29,16 @@ function WriteComment() {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => response.json())
-      .then((response) => setResponse({ ...response }))
+      .then((response) => {
+        return response.json().then((data) => {
+          if (!response.ok && !data.errors?.length) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+
+          return data;
+        });
+      })
+      .then((response) => setResponse(response))
       .catch((error) => setError(error))
       .finally(() => setSending(false));
   };
@@ -56,8 +65,8 @@ function WriteComment() {
       {error && <h3>A network error was encountered</h3>}
       {response &&
         response.errors &&
-        response.errors.map((error) => {
-          return <h3>{error.message}</h3>;
+        response.errors.map((error, index) => {
+          return <h3 key={`${error.message}-${index}`}>{error.message}</h3>;
         })}
     </div>
   );
