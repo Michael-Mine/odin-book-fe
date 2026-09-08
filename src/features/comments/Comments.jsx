@@ -15,9 +15,13 @@ function Comments() {
     <>
       <h3 className={styles.heading}>Comments</h3>
       <div className={styles.container}>
-        {comments.map((comment) => {
-          return <CommentsItem key={comment.cuid} comment={comment} />;
-        })}
+        {comments.length === 0 ? (
+          <p>No comments yet</p>
+        ) : (
+          comments.map((comment) => (
+            <CommentsItem key={comment.cuid} comment={comment} />
+          ))
+        )}
         <WriteComment />
       </div>
     </>
