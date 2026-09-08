@@ -4,11 +4,18 @@ const useComments = (postCuid) => {
   const [comments, setComments] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [previousPostCuid, setPreviousPostCuid] = useState(postCuid);
+
+  if (postCuid !== previousPostCuid) {
+    setPreviousPostCuid(postCuid);
+    setComments(null);
+    setError(null);
+    setLoading(true);
+  }
 
   useEffect(() => {
     const controller = new AbortController();
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("getting comments");
 
     fetch(`${apiUrl}v1/posts/${postCuid}/comments`, {
       method: "GET",
