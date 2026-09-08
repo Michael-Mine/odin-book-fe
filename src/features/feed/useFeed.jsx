@@ -37,7 +37,7 @@ const useFeed = () => {
     };
   }, []);
 
-  return { feed, setFeed, error, setError, loading };
+  return { feed, setFeed, error, loading };
 };
 
 export default useFeed;
