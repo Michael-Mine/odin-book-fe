@@ -15,15 +15,11 @@ function UserList() {
       <h2>Find People to Connect</h2>
       <div className={styles.listContainer}>
         {usersToFollow.map((user) => (
-          <div className={styles.listItemContainer}>
+          <div key={user.cuid} className={styles.listItemContainer}>
             <div>
               <img src={user.picURL} alt="profile pic" />
             </div>
-            <Link
-              to={`/profile/${user.cuid}`}
-              key={user.cuid}
-              className={styles.profileLink}
-            >
+            <Link to={`/profile/${user.cuid}`} className={styles.profileLink}>
               <span>{user.name}</span>
             </Link>
             <FollowRequestButton userCuid={user.cuid} />
