@@ -8,7 +8,6 @@ const useUsersFollowsReceived = () => {
   useEffect(() => {
     const controller = new AbortController();
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("getting users to follow");
 
     fetch(`${apiUrl}v1/follow-requests/received`, {
       method: "GET",
