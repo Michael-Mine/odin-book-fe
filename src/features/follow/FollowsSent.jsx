@@ -16,15 +16,11 @@ function FollowsSent() {
       <h2>Pending Follows Sent</h2>
       <div>
         {usersFollowsSent.map((user) => (
-          <div className={styles.listItemContainer}>
+          <div key={user.cuid} className={styles.listItemContainer}>
             <div>
               <img src={user.picURL} alt="profile pic" />
             </div>
-            <Link
-              to={`/profile/${user.cuid}`}
-              key={user.cuid}
-              className={styles.profileLink}
-            >
+            <Link to={`/profile/${user.cuid}`} className={styles.profileLink}>
               <span>{user.name}</span>
             </Link>
             <FollowCancelButton userCuid={user.cuid} />
