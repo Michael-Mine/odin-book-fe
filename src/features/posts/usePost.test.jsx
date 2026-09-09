@@ -2,6 +2,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import usePost from "./usePost";
 
+function deferred() {
+  let resolve;
+  let reject;
+  const promise = new Promise((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  return { promise, resolve, reject };
+}
+
 describe("usePost", () => {
   let fetchMock;
 
@@ -123,6 +133,75 @@ describe("usePost", () => {
     expect(result.current.loading).toBe(true);
     expect(result.current.error).toBeNull();
   });
+
+  it.each(["success", "error"])(
+    "ignores an old request's late %s while the new post is loading",
+    async (outcome) => {
+      const oldRequest = deferred();
+      const nextRequest = deferred();
+      const nextPost = { cuid: "post-2", content: "New post" };
+      fetchMock.mockReturnValueOnce(oldRequest.promise)
+        .mockReturnValueOnce(nextRequest.promise);
+      const { result, rerender } = renderHook(({ cuid }) => usePost(cuid), {
+        initialProps: { cuid: "post-1" },
+      });
+
+      rerender({ cuid: "post-2" });
+      expect(fetchMock.mock.calls[0][1].signal.aborted).toBe(true);
+
+      await act(async () => {
+        if (outcome === "success") {
+          oldRequest.resolve({
+            ok: true,
+            json: () => Promise.resolve({ post: { cuid: "post-1" } }),
+          });
+        } else {
+          oldRequest.reject(new Error("Late failure"));
+        }
+      });
+
+      expect(result.current).toEqual({ post: null, error: null, loading: true });
+
+      await act(async () => {
+        nextRequest.resolve({
+          ok: true,
+          json: () => Promise.resolve({ post: nextPost }),
+        });
+      });
+      expect(result.current).toEqual({ post: nextPost, error: null, loading: false });
+    },
+  );
+
+  it.each(["success", "error"])(
+    "ignores old JSON's late %s after the new post has loaded",
+    async (outcome) => {
+      const oldBody = deferred();
+      const json = vi.fn(() => oldBody.promise);
+      const nextPost = { cuid: "post-2", content: "New post" };
+      fetchMock.mockResolvedValueOnce({ ok: true, json })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ post: nextPost }),
+        });
+      const { result, rerender } = renderHook(({ cuid }) => usePost(cuid), {
+        initialProps: { cuid: "post-1" },
+      });
+      await waitFor(() => expect(json).toHaveBeenCalledOnce());
+
+      rerender({ cuid: "post-2" });
+      await waitFor(() => expect(result.current.post).toEqual(nextPost));
+
+      await act(async () => {
+        if (outcome === "success") {
+          oldBody.resolve({ post: { cuid: "post-1", content: "Stale post" } });
+        } else {
+          oldBody.reject(new SyntaxError("Late JSON failure"));
+        }
+      });
+
+      expect(result.current).toEqual({ post: nextPost, error: null, loading: false });
+    },
+  );
 
   it("resets loading when requesting another post after success", async () => {
     const firstPost = { cuid: "post-1" };

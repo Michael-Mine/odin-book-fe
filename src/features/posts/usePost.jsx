@@ -28,9 +28,13 @@ const usePost = (postCuid) => {
         }
         return response.json();
       })
-      .then((response) => setPost(response.post))
+      .then((response) => {
+        if (!controller.signal.aborted) {
+          setPost(response.post);
+        }
+      })
       .catch((error) => {
-        if (error.name !== "AbortError") {
+        if (!controller.signal.aborted && error.name !== "AbortError") {
           setError(error);
         }
       })
