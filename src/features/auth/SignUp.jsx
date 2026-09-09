@@ -35,7 +35,7 @@ function SignUp() {
         httpResponse.json().then((data) => {
           if (!httpResponse.ok) {
             if (
-              httpResponse.status === 400 &&
+              (httpResponse.status === 400 || httpResponse.status === 409) &&
               Array.isArray(data?.errors) &&
               data.errors.length > 0
             ) {

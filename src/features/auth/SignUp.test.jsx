@@ -135,12 +135,57 @@ describe("SignUp component", () => {
     expect(screen.getByRole("button", { name: "Sign Up" })).toBeInTheDocument();
   });
 
+  it("displays a duplicate-account error and allows retry with another email", async () => {
+    fetch
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 409,
+        json: () => Promise.resolve({
+          errors: [{ field: "username", message: "An account already exists." }],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 201,
+        json: () => Promise.resolve({ user: { cuid: "new-user" } }),
+      });
+    const user = userEvent.setup();
+    render(<SignUp />);
+    await user.type(screen.getByLabelText("Name:"), "Mine");
+    await user.type(screen.getByLabelText("Email:"), "existing@example.com");
+    await user.type(screen.getByLabelText("Password:"), "test-password");
+    await user.type(screen.getByLabelText("Password Confirm:"), "test-password");
+    await user.click(screen.getByRole("button", { name: "Sign Up" }));
+
+    expect(await screen.findByText("An account already exists.")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sign Up" })).toBeEnabled();
+    expect(screen.getByLabelText("Email:")).toHaveValue("existing@example.com");
+
+    await user.clear(screen.getByLabelText("Email:"));
+    await user.type(screen.getByLabelText("Email:"), "new@example.com");
+    await user.click(screen.getByRole("button", { name: "Sign Up" }));
+
+    expect(await screen.findByRole("heading", { name: "User created" })).toBeInTheDocument();
+    expect(screen.queryByText("An account already exists.")).not.toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(fetch.mock.calls[1][1].body)).toEqual({
+      name: "Mine",
+      username: "new@example.com",
+      password: "test-password",
+      passwordCheck: "test-password",
+    });
+  });
+
   it.each([
     { status: 401, data: { message: "Unauthorized" } },
     { status: 500, data: { user: { cuid: "unexpected-user" } } },
     { status: 400, data: { errors: [] } },
     { status: 400, data: { errors: "Invalid input" } },
     { status: 400, data: null },
+    { status: 409, data: { errors: [] } },
+    { status: 409, data: { errors: "Invalid input" } },
+    { status: 409, data: null },
   ])("shows a generic error for HTTP $status with body $data", async ({ status, data }) => {
     fetch.mockResolvedValue({ ok: false, status, json: () => Promise.resolve(data) });
     const user = userEvent.setup();
