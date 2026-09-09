@@ -16,9 +16,12 @@ function SignUp() {
   };
 
   const sendSignUp = () => {
+    if (signingUp) return;
+
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("signing up");
     setSigningUp(true);
+    setError(null);
+    setResponse(null);
 
     fetch(`${apiUrl}v1/auth/sign-up`, {
       method: "POST",
@@ -28,8 +31,28 @@ function SignUp() {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => response.json())
-      .then((response) => setResponse({ ...response }))
+      .then((httpResponse) =>
+        httpResponse.json().then((data) => {
+          if (!httpResponse.ok) {
+            if (
+              httpResponse.status === 400 &&
+              Array.isArray(data?.errors) &&
+              data.errors.length > 0
+            ) {
+              return { errors: data.errors };
+            }
+
+            throw new Error(`Response status: ${httpResponse.status}`);
+          }
+
+          if (!data?.user) {
+            throw new Error("Signup response is missing a user");
+          }
+
+          return { user: data.user };
+        }),
+      )
+      .then((data) => setResponse(data))
       .catch((error) => setError(error))
       .finally(() => setSigningUp(false));
   };
@@ -87,7 +110,11 @@ function SignUp() {
         />
       </div>
       <button onClick={sendSignUp}>Sign Up</button>
-      {error && <p className="characters">A network error was encountered</p>}
+      {error && (
+        <p className="characters" role="alert">
+          Unable to sign up. Please try again.
+        </p>
+      )}
       {response &&
         response.errors &&
         response.errors.map((error) => {
