@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function AboutEdit({ currentBio }) {
   const [formData, setFormData] = useState({
-    bio: currentBio,
+    bio: currentBio ?? "",
   });
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -17,6 +17,7 @@ function AboutEdit({ currentBio }) {
     const url = `${apiUrl}v1/users/me`;
     setSending(true);
     setError(null);
+    setResponse(null);
 
     fetch(url, {
       method: "PUT",
@@ -26,7 +27,23 @@ function AboutEdit({ currentBio }) {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => response.json())
+      .then(async (response) => {
+        const data = await response.json();
+
+        if (!response.ok) {
+          if (
+            response.status === 400 &&
+            Array.isArray(data.errors) &&
+            data.errors.length > 0
+          ) {
+            return { errors: data.errors };
+          }
+
+          throw new Error(`Response status: ${response.status}`);
+        }
+
+        return data;
+      })
       .then((response) => setResponse({ ...response }))
       .catch((error) => setError(error))
       .finally(() => setSending(false));
