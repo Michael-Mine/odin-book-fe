@@ -11,6 +11,12 @@ function Profile() {
   let { userCuid } = useParams();
   const { userProfile, error, loading } = useProfile(userCuid);
   const [showAboutEdit, setShowAboutEdit] = useState(false);
+  const [previousUserCuid, setPreviousUserCuid] = useState(userCuid);
+
+  if (userCuid !== previousUserCuid) {
+    setPreviousUserCuid(userCuid);
+    setShowAboutEdit(false);
+  }
 
   if (loading) return <h2>Loading...</h2>;
   if (error) return <h2>A network error was encountered</h2>;
@@ -62,7 +68,9 @@ function Profile() {
       ) : (
         <p className={styles.aboutText}>Not updated</p>
       )}
-      {showAboutEdit && <AboutEdit currentBio={userProfile.bio} />}
+      {userProfile.isOwnProfile && showAboutEdit && (
+        <AboutEdit currentBio={userProfile.bio} />
+      )}
       <ProfileTabs key={userCuid} userCuid={userCuid} />
     </div>
   );
