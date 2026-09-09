@@ -19,11 +19,19 @@ function Login() {
   const sendLogin = (email, pass) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const url = `${apiUrl}v1/auth/login`;
-    const destination = location.state?.from?.pathname ?? "/";
+    const from = location.state?.from;
+    const destination = from
+      ? {
+          pathname: from.pathname,
+          search: from.search ?? "",
+          hash: from.hash ?? "",
+        }
+      : "/";
 
     if (loggingIn) return;
     setLoggingIn(true);
     setError(null);
+    setResponse(null);
 
     fetch(url, {
       method: "POST",
@@ -36,28 +44,30 @@ function Login() {
         password: pass,
       }),
     })
-      .then((httpResponse) => {
-        return httpResponse.json().then((data) => {
-          return { httpResponse, data };
-        });
-      })
-      .then(({ httpResponse, data }) => {
-        setResponse(data);
+      .then((httpResponse) =>
+        httpResponse.json().then((data) => {
+          if (httpResponse.status === 401) {
+            setResponse({ message: "Authentication failed" });
+            return;
+          }
 
-        if (httpResponse.ok && data.user) {
+          if (!httpResponse.ok) {
+            throw new Error(`Response status: ${httpResponse.status}`);
+          }
+
+          if (!data?.user) {
+            throw new Error("Login response is missing a user");
+          }
+
           setUser(data.user);
           navigate(destination, { replace: true });
-        }
-      })
+        }),
+      )
       .catch((error) => setError(error))
       .finally(() => setLoggingIn(false));
   };
 
   if (loggingIn) return <p>Logging In...</p>;
-
-  if (response && response.user) {
-    setUser(response.user);
-  }
 
   return (
     <div>
@@ -95,7 +105,11 @@ function Login() {
         Guest Login
       </button>
       <p>Use Guest Login to view the app without signing up!</p>
-      {error && <p className="characters">A network error was encountered</p>}
+      {error && (
+        <p className="characters" role="alert">
+          Unable to log in. Please try again.
+        </p>
+      )}
       {response && !response.user && (
         <p className="characters">Authentication failed</p>
       )}
