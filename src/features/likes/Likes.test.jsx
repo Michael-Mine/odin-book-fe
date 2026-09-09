@@ -1,8 +1,39 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter, Route, Routes } from "react-router";
+import { createMemoryRouter, MemoryRouter, Route, RouterProvider, Routes } from "react-router";
 import Likes from "./Likes";
+import PostPage from "../posts/PostPage";
+import usePost from "../posts/usePost";
+
+vi.mock("../posts/usePost", () => ({ default: vi.fn() }));
+vi.mock("../comments/Comments", () => ({ default: () => null }));
+
+function deferred() {
+  let resolve;
+  let reject;
+  const promise = new Promise((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  return { promise, resolve, reject };
+}
+
+function renderPostPage() {
+  usePost.mockImplementation((cuid) => ({
+    post: {
+      cuid, content: cuid, likeCount: 2,
+      createdAt: "2026-09-08T12:00:00Z",
+      author: { cuid: "author", name: "Author", picURL: "https://example.com/avatar.png" },
+    },
+    loading: false, error: null,
+  }));
+  const router = createMemoryRouter([
+    { path: "/post/:postCuid", element: <PostPage /> },
+  ], { initialEntries: ["/post/post-123"] });
+  const view = render(<RouterProvider router={router} />);
+  return { router, ...view };
+}
 
 vi.mock("./LikeButton", () => ({
   default: function LikeButton({ likeCount, postCuid }) {
@@ -73,7 +104,7 @@ describe("Likes", () => {
 
     expect(fetchMock).toHaveBeenCalledExactlyOnceWith(
       "https://api.example.com/v1/posts/post-123/likes",
-      { method: "GET", credentials: "include" },
+      { method: "GET", credentials: "include", signal: expect.any(AbortSignal) },
     );
     expect(screen.queryByText("Users Liked:")).not.toBeInTheDocument();
   });
@@ -160,5 +191,98 @@ describe("Likes", () => {
     expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Show Likes" })).not.toBeInTheDocument();
     expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("prevents duplicate requests during fetching and JSON parsing", async () => {
+    const request = deferred();
+    const body = deferred();
+    fetchMock.mockReturnValue(request.promise);
+    const user = renderLikes();
+    await user.click(screen.getByRole("button", { name: "Show Likes" }));
+    const button = screen.getByRole("button", { name: "Loading likes..." });
+    expect(button).toBeDisabled();
+    await user.click(button);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    await act(async () => request.resolve({ ok: true, json: () => body.promise }));
+    expect(button).toBeDisabled();
+    await user.click(button);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    await act(async () => body.resolve({ likes }));
+    expect(screen.getByRole("link", { name: "Michael" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Loading likes..." })).not.toBeInTheDocument();
+  });
+
+  it.each([null, {}, { likes: null }, { likes: {} }])("handles malformed data %j and allows retry", async (data) => {
+    fetchMock.mockResolvedValueOnce(jsonResponse(data)).mockResolvedValueOnce(jsonResponse({ likes }));
+    const user = renderLikes();
+    await user.click(screen.getByRole("button", { name: "Show Likes" }));
+    expect(await screen.findByText(errorMessage)).toBeInTheDocument();
+    expect(screen.queryByText("Users Liked:")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Show Likes" })).toBeEnabled();
+    await user.click(screen.getByRole("button", { name: "Show Likes" }));
+    expect(await screen.findByRole("link", { name: "Michael" })).toBeInTheDocument();
+    expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
+  });
+
+  it("aborts the request on unmount", async () => {
+    fetchMock.mockReturnValue(new Promise(() => {}));
+    const user = userEvent.setup();
+    const { unmount } = renderPostPage();
+    await user.click(screen.getByRole("button", { name: "Show Likes" }));
+    const signal = fetchMock.mock.calls[0][1].signal;
+    expect(signal.aborted).toBe(false);
+    unmount();
+    expect(signal.aborted).toBe(true);
+  });
+
+  it("ignores AbortError and restores the request button", async () => {
+    fetchMock.mockRejectedValue(new DOMException("Aborted", "AbortError"));
+    const user = renderLikes();
+    await user.click(screen.getByRole("button", { name: "Show Likes" }));
+    expect(await screen.findByRole("button", { name: "Show Likes" })).toBeEnabled();
+    expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
+  });
+
+  it.each(["success", "error"])("resets the previous post's %s state on navigation", async (outcome) => {
+    if (outcome === "success") fetchMock.mockResolvedValueOnce(jsonResponse({ likes }));
+    else fetchMock.mockRejectedValueOnce(new Error("Offline"));
+    const user = userEvent.setup();
+    const { router } = renderPostPage();
+    await user.click(screen.getByRole("button", { name: "Show Likes" }));
+    expect(await screen.findByText(outcome === "success" ? "Users Liked:" : errorMessage)).toBeInTheDocument();
+    await act(async () => router.navigate("/post/post-456"));
+    expect(screen.queryByText("Users Liked:")).not.toBeInTheDocument();
+    expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Show Likes" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Like post-456 (2)" })).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(["success", "error"])("ignores old JSON's late %s while another post's likes load", async (outcome) => {
+    const oldBody = deferred();
+    const nextRequest = deferred();
+    const json = vi.fn(() => oldBody.promise);
+    fetchMock.mockResolvedValueOnce({ ok: true, json }).mockReturnValueOnce(nextRequest.promise);
+    const user = userEvent.setup();
+    const { router } = renderPostPage();
+    await user.click(screen.getByRole("button", { name: "Show Likes" }));
+    await waitFor(() => expect(json).toHaveBeenCalledOnce());
+    const oldSignal = fetchMock.mock.calls[0][1].signal;
+    await act(async () => router.navigate("/post/post-456"));
+    expect(oldSignal.aborted).toBe(true);
+    await user.click(screen.getByRole("button", { name: "Show Likes" }));
+    expect(fetchMock).toHaveBeenLastCalledWith("https://api.example.com/v1/posts/post-456/likes", {
+      method: "GET", credentials: "include", signal: expect.any(AbortSignal),
+    });
+    await act(async () => {
+      if (outcome === "success") oldBody.resolve({ likes });
+      else oldBody.reject(new Error("Late failure"));
+    });
+    expect(screen.getByRole("button", { name: "Loading likes..." })).toBeDisabled();
+    expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Michael" })).not.toBeInTheDocument();
+    await act(async () => nextRequest.resolve(jsonResponse({ likes: [{ user: { cuid: "new-user", name: "New user" } }] })));
+    expect(screen.getByRole("link", { name: "New user" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Michael" })).not.toBeInTheDocument();
   });
 });

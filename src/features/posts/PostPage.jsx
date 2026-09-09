@@ -18,7 +18,7 @@ function PostPage() {
       <h2 className={styles.heading}>{post.author.name}'s Post</h2>
       <PostHeader post={post} />
       <p>{post.content}</p>
-      <Likes likeCount={post.likeCount} />
+      <Likes key={postCuid} likeCount={post.likeCount} />
       <Comments />
     </div>
   );
