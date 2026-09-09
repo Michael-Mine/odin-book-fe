@@ -33,6 +33,12 @@ function SignUp() {
     })
       .then((httpResponse) =>
         httpResponse.json().then((data) => {
+          if (httpResponse.status === 429) {
+            return {
+              errors: [{ field: "form", message: "Too many signup attempts. Please try again later." }],
+            };
+          }
+
           if (!httpResponse.ok) {
             if (
               (httpResponse.status === 400 || httpResponse.status === 409) &&

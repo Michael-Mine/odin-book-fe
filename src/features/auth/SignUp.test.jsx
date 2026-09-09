@@ -298,4 +298,31 @@ describe("SignUp component", () => {
     expect(screen.getByRole("heading", { name: "User created" })).toBeInTheDocument();
     expect(fetch).toHaveBeenCalledTimes(1);
   });
+  it("shows a rate-limit message and allows a later successful retry", async () => {
+    fetch
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 429,
+        json: () => Promise.resolve({ message: "Too many signup attempts. Please try again later." }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 201,
+        json: () => Promise.resolve({ user: { cuid: "user-1" } }),
+      });
+    const user = userEvent.setup();
+    render(<SignUp />);
+    await user.type(screen.getByLabelText("Email:"), "user@example.com");
+    await user.click(screen.getByRole("button", { name: "Sign Up", exact: true }));
+
+    expect(await screen.findByText("Too many signup attempts. Please try again later.")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email:")).toHaveValue("user@example.com");
+    expect(screen.getByRole("button", { name: "Sign Up", exact: true })).toBeEnabled();
+
+    await user.click(screen.getByRole("button", { name: "Sign Up", exact: true }));
+    expect(await screen.findByRole("heading", { name: "User created" })).toBeInTheDocument();
+    expect(screen.queryByText("Too many signup attempts. Please try again later.")).not.toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
 });

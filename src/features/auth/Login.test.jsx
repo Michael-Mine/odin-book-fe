@@ -289,4 +289,32 @@ describe("Login component", () => {
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
+  it("shows a rate-limit message and allows a later successful retry", async () => {
+    fetch
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 429,
+        json: () => Promise.resolve({ message: "Too many login attempts. Please try again later." }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ user: { cuid: "user-1" } }),
+      });
+    const user = userEvent.setup();
+    const { setUser } = renderLogin();
+    await user.type(screen.getByLabelText("Email:"), "user@example.com");
+    await user.click(screen.getByRole("button", { name: "Login", exact: true }));
+
+    expect(await screen.findByText("Too many login attempts. Please try again later.")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email:")).toHaveValue("user@example.com");
+    expect(screen.getByRole("button", { name: "Login", exact: true })).toBeEnabled();
+    expect(setUser).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: "Login", exact: true }));
+    expect(await screen.findByRole("heading", { name: "Feed" })).toBeInTheDocument();
+    expect(screen.queryByText("Too many login attempts. Please try again later.")).not.toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
 });

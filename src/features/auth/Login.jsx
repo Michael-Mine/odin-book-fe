@@ -46,6 +46,11 @@ function Login() {
     })
       .then((httpResponse) =>
         httpResponse.json().then((data) => {
+          if (httpResponse.status === 429) {
+            setResponse({ message: "Too many login attempts. Please try again later." });
+            return;
+          }
+
           if (httpResponse.status === 401) {
             setResponse({ message: "Authentication failed" });
             return;
@@ -111,7 +116,7 @@ function Login() {
         </p>
       )}
       {response && !response.user && (
-        <p className="characters">Authentication failed</p>
+        <p className="characters">{response.message}</p>
       )}
       {signUpForm && <SignUp />}
     </div>
