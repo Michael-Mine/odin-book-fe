@@ -1,195 +1,165 @@
-# Odin-Book - Frontend Repo (Backend is Separate)
+# Odin Book
 
-A frontend repo for a Social Media Site - similar to Facebook, by Michael Mine.
+A full-stack social networking application where users can publish posts, comment, like posts, and manage follow requests.
 
-Live Link on Netlify: https://mrmine-odin-book.netlify.app/
+I built the React frontend and Express REST API as my final project for [The Odin Project](https://www.theodinproject.com/), bringing together frontend development, relational database modelling, authentication, testing, and deployment.
 
-![Screenshot](/public/screenshot-odin-book.png)
+**[Live demo](https://mrmine-odin-book.netlify.app/)** · **[Backend repository](https://github.com/Michael-Mine/odin-book-api)**
 
-This is one of the final projects from The Odin Project - a free, open-source curriculum teaching full-stack web development.
+Choose **Guest Login** to explore the app without creating an account.
 
-Built from scratch with Vite using React and Javascript with 141 tests using Vitest and React Testing Library. Hosted on Netlify.
-
-Connects to this separate backend API repo using Node, Express, PostgreSQL and Prisma ORM. Hosted on Railway.
-
-Backend repo here: https://github.com/Michael-Mine/odin-book-api
-
-Note: As backend is REST API, it cannot handle real time updates. Page reloads (top left icon) are needed to check for new posts.
+<!-- Add a screenshot here after committing the image:
+![Odin Book home feed showing posts and navigation](public/screenshot-odin-book.png)
+-->
 
 ## Features
 
-- Users can send follow request to other users.
-- Users can create, comment on and like posts.
-- Users have a feed to see recent posts.
-- Updatable profiles for users to view.
-- Authorisation using Passport local and sessions
-- Validations on backend.
+- Browse a paginated home feed containing your posts and posts from users you follow.
+- Create posts, write comments, and like posts.
+- Discover users and send follow requests.
+- Accept, reject, and cancel follow requests, or unfollow users.
+- View profiles, posts, followers, and following lists.
+- Edit your profile about section.
+- Display profile pictures through Gravatar, with generated fallback avatars.
+- Sign up and log in using session-based authentication.
+
+## Engineering Highlights
+
+### Loading more posts without losing the current feed
+
+The feed uses cursor-based pagination to load additional posts. New pages are appended to the existing feed, and the pagination control is disabled while a request is pending.
+
+If a request fails, existing posts remain visible and the user can retry from the same cursor.
+
+### Handling overlapping profile requests
+
+Profile tabs load posts, followers, and following lists on demand and reuse previously fetched content.
+
+Switching tabs cancels the previous request using `AbortController`. Response handling also checks which request is current, preventing an older response from overwriting the active tab’s content or loading state.
+
+### Managing authentication across the frontend and API
+
+The frontend checks the current session and protects routes that require authentication. Users who need to log in are returned to their originally requested page after authentication.
+
+The API uses Passport Local, hashed passwords, and sessions stored in PostgreSQL. Frontend requests include credentials, with CORS and cookie settings configured for the separate frontend and backend deployments.
+
+### Testing user-visible behaviour
+
+The frontend has **423 automated tests across 43 test files**, covering components, custom hooks, routing, and user interactions.
+
+Examples include:
+
+- Successful login, rejected credentials, and redirects after authentication.
+- Loading, empty, success, and error states.
+- Pagination, failed requests, and retries.
+- Preventing duplicate submissions while requests are pending.
+- Request cancellation and stale responses.
+- Follow-request actions and profile interactions.
+
+Tests use Vitest and React Testing Library with mocked API requests. They verify frontend behaviour independently of a running backend; they are not browser end-to-end tests.
 
 ## Tech Stack
 
-| Layer    | Technologies                                |
-| -------- | ------------------------------------------- |
-| Frontend | React, JavaScript, Vite, Native CSS modules |
-| Backend  | Node, Express, JavaScript                   |
-| Database | PostgreSQL, Prisma ORM                      |
-| Testing  | Vitest, React Testing Library, Jest         |
+| Area           | Technologies                              |
+| -------------- | ----------------------------------------- |
+| Frontend       | React, JavaScript, React Router           |
+| Styling        | CSS Modules and shared CSS                |
+| Build tooling  | Vite                                      |
+| Backend        | Node.js, Express                          |
+| Database       | PostgreSQL, Prisma ORM                    |
+| Authentication | Passport Local, express-session, bcryptjs |
+| Validation     | express-validator                         |
+| Testing        | Vitest, React Testing Library, jest-dom   |
+| Deployment     | Netlify frontend, Railway backend         |
 
-## System Architecture
+## Architecture
 
-The application is split into a 2 repos for clear separation of concerns.
+The application is maintained in two repositories:
 
-- **Server**: A RESTful API focused on controller functions and middleware validation.
-- **Client**: Component-based SPA.
+- **This repository:** the React single-page application, organised into feature areas such as authentication, feed, posts, comments, likes, profiles, and follows.
+- **[Backend repository](https://github.com/Michael-Mine/odin-book-api):** the Express API, authentication, validation, and database access.
 
-## Database Schema
+The frontend communicates with the API through JSON requests under `/v1`. Prisma models users, posts, comments, likes, follow relationships, and sessions in PostgreSQL.
 
-```prisma
-model Session {
-  id          String   @id
-  sid         String   @unique
-  data        String
-  expiresAt   DateTime
-}
-
-model User {
-  id            Int       @id @default(autoincrement())
-  cuid          String    @default(cuid(2))
-  username      String    @unique
-  password      String
-  name          String
-  bio           String?
-  picURL        String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime?
-  following     Follow[]  @relation("Following")
-  followers     Follow[]  @relation("Followers")
-  posts         Post[]
-  comments      Comment[]
-  likes         Like[]
-}
-
-enum FollowStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
-  BLOCKED
-}
-
-model Follow {
-  follower    User          @relation("Following", fields: [followerId], references: [id])
-  followerId  Int
-  following   User          @relation("Followers", fields: [followingId], references: [id])
-  followingId Int
-  createdAt   DateTime      @default(now())
-  status      FollowStatus  @default(PENDING)
-  @@id([followerId, followingId])
-}
-
-model Post {
-  id            Int       @id @default(autoincrement())
-  cuid          String    @default(cuid(2))
-  content       String
-  picURL        String?
-  createdAt     DateTime  @default(now())
-  deletedAt     DateTime?
-  author        User      @relation(fields: [authorId], references: [id])
-  authorId      Int
-  comments      Comment[]
-  likes         Like[]
-  @@index([authorId])
-}
-
-model Comment {
-  id          Int         @id @default(autoincrement())
-  cuid        String      @default(cuid(2))
-  content     String
-  createdAt   DateTime    @default(now())
-  deletedAt   DateTime?
-  author      User        @relation(fields: [authorId], references: [id])
-  authorId    Int
-  post        Post        @relation(fields: [postId], references: [id])
-  postId      Int
-  @@index([authorId])
-  @@index([postId])
-}
-
-model Like {
-  user      User        @relation(fields: [userId], references: [id])
-  userId    Int
-  post      Post        @relation(fields: [postId], references: [id])
-  postId    Int
-  @@id([userId, postId])
-  createdAt DateTime    @default(now())
-}
-```
-
-## API Endpoints
-
-| Method | Endpoint                          | Description                            | Auth |
-| ------ | --------------------------------- | -------------------------------------- | ---- |
-| POST   | /auth/sign-up                     | Create a new account                   | No   |
-| POST   | /auth/login                       | Log in and create a session            | No   |
-| POST   | /auth/logout                      | End the current session                | No   |
-| GET    | /auth/session                     | Return the logged-in user              | No   |
-| POST   | /posts                            | Create a post                          | Yes  |
-| GET    | /posts/feed                       | Get posts from user and followed users | Yes  |
-| GET    | /posts/:postCuid                  | Get one post                           | Yes  |
-| GET    | /posts/:postCuid/comments         | Get a post's comments                  | Yes  |
-| POST   | /posts/:postCuid/comments         | Create a comment                       | Yes  |
-| GET    | /posts/:postCuid/likes            | Get users who liked a post             | Yes  |
-| POST   | /posts/:postCuid/likes            | Like a post                            | Yes  |
-| GET    | /users/:userCuid                  | Get a user's profile                   | Yes  |
-| GET    | /users/:userCuid/posts            | Get a user's posts                     | Yes  |
-| GET    | /users/:userCuid/followers        | Get a user's followers                 | Yes  |
-| GET    | /users/:userCuid/following        | Get users they follow                  | Yes  |
-| PUT    | /users/me                         | Update a user's profile                | Yes  |
-| GET    | /users                            | List users not followed                | Yes  |
-| GET    | /follow-requests/received         | Get received requests                  | Yes  |
-| GET    | /follow-requests/sent             | Get sent requests                      | Yes  |
-| POST   | /follow-requests/:userCuid        | Sends a follow request                 | Yes  |
-| DELETE | /follow-requests/:userCuid        | Cancels a follow request               | Yes  |
-| POST   | /follow-requests/:userCuid/accept | Accept a request                       | Yes  |
-| POST   | /follow-requests/:userCuid/reject | Reject a request                       | Yes  |
+See the [backend README](https://github.com/Michael-Mine/odin-book-api#readme) for the database schema, API endpoints, and backend setup.
 
 ## Local Development
 
-### Setup
+### Prerequisites
 
-**1. Clone & Install:**
+- Node.js 24 and npm.
+- The backend API configured and running. Follow the setup instructions in the [backend repository](https://github.com/Michael-Mine/odin-book-api).
+
+### 1. Clone and install
 
 ```bash
-git clone https://github.com/Michael-Mine/odin-odin-book-fe.git
-
-npm install
+git clone https://github.com/Michael-Mine/odin-book-fe.git
+cd odin-book-fe
+npm ci
 ```
 
-**2. Environment Setup:**
+### 2. Configure the environment
 
-Create a `.env` in root with `VITE_API_URL="http://localhost:3000/"`
+Create a `.env` file in the project root:
 
-**3. Run Development Server:**
+```dotenv
+VITE_API_URL=http://localhost:3003/
+```
+
+Keep the trailing `/`: the frontend appends paths such as `v1/auth/login` to this value.
+
+To enable **Guest Login**, also add credentials for an existing demo account in your backend database:
+
+```dotenv
+VITE_GUEST_EMAIL=guest@example.com
+VITE_GUEST_PASS=your-demo-account-password
+```
+
+These values do not create the account. Vite includes `VITE_` variables in the browser bundle, so use a dedicated public demo account.
+
+Ensure the backend’s `FRONTEND_ORIGIN` matches the frontend development URL, normally `http://localhost:5173`.
+
+### 3. Start the frontend
 
 ```bash
 npm run dev
 ```
 
-**4. Run Tests:**
+Open the local URL printed by Vite.
 
-```bash
-npm run test
-```
+## Available Commands
 
-## Deployment on Netlify
+| Command                 | Purpose                              |
+| ----------------------- | ------------------------------------ |
+| `npm run dev`           | Start the development server         |
+| `npm run test`          | Run tests in watch mode              |
+| `npm run test -- --run` | Run the test suite once              |
+| `npm run lint`          | Run ESLint                           |
+| `npm run build`         | Create the production build          |
+| `npm run preview`       | Preview the production build locally |
 
-1. Link GitHub repo
+## Deployment
 
-2. Check default Build command is as:
+The frontend is hosted on Netlify.
 
-```bash
-npm run build
-```
+To deploy your own instance:
 
-3. Check default Publish directory is as `dist`
+1. Connect the frontend GitHub repository to Netlify.
+2. Set the build command to `npm run build`.
+3. Set the publish directory to `dist`.
+4. Set `VITE_API_URL` to your deployed API’s base URL, including the trailing `/`.
+5. Set `VITE_GUEST_EMAIL` and `VITE_GUEST_PASS` if using guest login.
+6. Configure the backend’s `FRONTEND_ORIGIN` to match your frontend URL.
 
-4. Add an environment variable key: `VITE_API_URL` with value as the public hosted URL for the API repo.
+The repository includes `public/_redirects` so direct visits to client-side routes are served through `index.html`.
+
+## Current Limitations
+
+- The feed does not update automatically; refresh the page to check for new posts.
+- Automated tests cover the frontend with mocked API responses. Browser end-to-end testing against the backend is a future improvement.
+
+## Acknowledgements
+
+Built as the final project in [The Odin Project](https://www.theodinproject.com/) full-stack JavaScript curriculum.
+
+Profile images are provided through [Gravatar](https://gravatar.com/).
