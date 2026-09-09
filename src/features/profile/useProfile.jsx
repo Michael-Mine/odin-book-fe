@@ -4,11 +4,18 @@ const useProfile = (userCuid) => {
   const [userProfile, setUserProfile] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [previousUserCuid, setPreviousUserCuid] = useState(userCuid);
+
+  if (userCuid !== previousUserCuid) {
+    setPreviousUserCuid(userCuid);
+    setUserProfile(null);
+    setError(null);
+    setLoading(true);
+  }
 
   useEffect(() => {
     const controller = new AbortController();
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("getting profile");
 
     fetch(`${apiUrl}v1/users/${userCuid}`, {
       method: "GET",
@@ -21,9 +28,13 @@ const useProfile = (userCuid) => {
         }
         return response.json();
       })
-      .then((response) => setUserProfile(response.user))
+      .then((response) => {
+        if (!controller.signal.aborted) {
+          setUserProfile(response.user);
+        }
+      })
       .catch((error) => {
-        if (error.name !== "AbortError") {
+        if (!controller.signal.aborted && error.name !== "AbortError") {
           setError(error);
         }
       })
