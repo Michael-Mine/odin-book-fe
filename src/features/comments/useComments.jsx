@@ -28,9 +28,13 @@ const useComments = (postCuid) => {
         }
         return response.json();
       })
-      .then((response) => setComments(response.comments))
+      .then((response) => {
+        if (!controller.signal.aborted) {
+          setComments(response.comments);
+        }
+      })
       .catch((error) => {
-        if (error.name !== "AbortError") {
+        if (!controller.signal.aborted && error.name !== "AbortError") {
           setError(error);
         }
       })

@@ -2,6 +2,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import useComments from "./useComments";
 
+function deferred() {
+  let resolve;
+  let reject;
+  const promise = new Promise((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  return { promise, resolve, reject };
+}
+
 describe("useComments", () => {
   let fetchMock;
 
@@ -165,4 +175,73 @@ describe("useComments", () => {
     expect(fetchMock.mock.calls[1][1].signal.aborted).toBe(false);
     expect(result.current).toEqual({ comments: null, error: null, loading: true });
   });
+
+  it.each(["success", "error"])(
+    "ignores an old request's late %s while the new comments are loading",
+    async (outcome) => {
+      const oldRequest = deferred();
+      const nextRequest = deferred();
+      const nextComments = [{ cuid: "comment-2", content: "New comment" }];
+      fetchMock.mockReturnValueOnce(oldRequest.promise)
+        .mockReturnValueOnce(nextRequest.promise);
+      const { result, rerender } = renderHook(({ cuid }) => useComments(cuid), {
+        initialProps: { cuid: "post-1" },
+      });
+
+      rerender({ cuid: "post-2" });
+      expect(fetchMock.mock.calls[0][1].signal.aborted).toBe(true);
+
+      await act(async () => {
+        if (outcome === "success") {
+          oldRequest.resolve({
+            ok: true,
+            json: () => Promise.resolve({ comments: [{ cuid: "comment-1" }] }),
+          });
+        } else {
+          oldRequest.reject(new Error("Late failure"));
+        }
+      });
+
+      expect(result.current).toEqual({ comments: null, error: null, loading: true });
+
+      await act(async () => {
+        nextRequest.resolve({
+          ok: true,
+          json: () => Promise.resolve({ comments: nextComments }),
+        });
+      });
+      expect(result.current).toEqual({ comments: nextComments, error: null, loading: false });
+    },
+  );
+
+  it.each(["success", "error"])(
+    "ignores old JSON's late %s after the new comments have loaded",
+    async (outcome) => {
+      const oldBody = deferred();
+      const json = vi.fn(() => oldBody.promise);
+      const nextComments = [{ cuid: "comment-2", content: "New comment" }];
+      fetchMock.mockResolvedValueOnce({ ok: true, json })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ comments: nextComments }),
+        });
+      const { result, rerender } = renderHook(({ cuid }) => useComments(cuid), {
+        initialProps: { cuid: "post-1" },
+      });
+      await waitFor(() => expect(json).toHaveBeenCalledOnce());
+
+      rerender({ cuid: "post-2" });
+      await waitFor(() => expect(result.current.comments).toEqual(nextComments));
+
+      await act(async () => {
+        if (outcome === "success") {
+          oldBody.resolve({ comments: [{ cuid: "comment-1", content: "Stale comment" }] });
+        } else {
+          oldBody.reject(new SyntaxError("Late JSON failure"));
+        }
+      });
+
+      expect(result.current).toEqual({ comments: nextComments, error: null, loading: false });
+    },
+  );
 });
