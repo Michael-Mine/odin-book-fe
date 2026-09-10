@@ -8,14 +8,14 @@ I built the React frontend and Express REST API as my final project for [The Odi
 
 Choose **Guest Login** to explore the app without creating an account.
 
-<!-- Add a screenshot here after committing the image:
-![Odin Book home feed showing posts and navigation](public/screenshot-odin-book.png)
--->
+![Odin Book home feed showing posts and navigation](public/screenshot-odin-book1.png)
+
+![Odin Book new follows page showing follow requests](public/screenshot-odin-book2.png)
 
 ## Features
 
 - Browse a paginated home feed containing your posts and posts from users you follow.
-- Create posts, write comments, and like posts.
+- Create posts, write comments and like posts.
 - Discover users and send follow requests.
 - Accept, reject, and cancel follow requests, or unfollow users.
 - View profiles, posts, followers, and following lists.
