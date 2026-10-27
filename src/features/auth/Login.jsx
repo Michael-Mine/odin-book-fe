@@ -47,7 +47,9 @@ function Login() {
       .then((httpResponse) =>
         httpResponse.json().then((data) => {
           if (httpResponse.status === 429) {
-            setResponse({ message: "Too many login attempts. Please try again later." });
+            setResponse({
+              message: "Too many login attempts. Please try again later.",
+            });
             return;
           }
 
