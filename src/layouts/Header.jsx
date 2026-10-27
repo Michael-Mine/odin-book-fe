@@ -28,7 +28,7 @@ function Header({ user, setUser }) {
   return (
     <div className={styles.header}>
       <img className={styles.profilePic} src={user.picURL} alt="profile pic" />
-      <h1>Mr Mine Odin-Book</h1>
+      <h1 className={styles.heading}>Mr Mine Odin-Book</h1>
       <button onClick={logout} disabled={loading}>
         {loading ? "Logging out..." : "Logout"}
       </button>

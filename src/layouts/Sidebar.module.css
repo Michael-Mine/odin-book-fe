@@ -85,11 +85,12 @@
   .container {
     height: auto;
     z-index: 2;
+    padding: 0px;
   }
 
   .navigation {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 0px;
   }
 }

@@ -8,3 +8,13 @@
 .profilePic {
   margin-left: 55px;
 }
+
+@media (max-width: 768px) {
+  .profilePic {
+    margin-left: 20px;
+  }
+
+  .heading {
+    line-height: 1;
+  }
+}
