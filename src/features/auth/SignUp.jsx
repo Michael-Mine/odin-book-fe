@@ -35,7 +35,12 @@ function SignUp() {
         httpResponse.json().then((data) => {
           if (httpResponse.status === 429) {
             return {
-              errors: [{ field: "form", message: "Too many signup attempts. Please try again later." }],
+              errors: [
+                {
+                  field: "form",
+                  message: "Too many signup attempts. Please try again later.",
+                },
+              ],
             };
           }
 
@@ -67,10 +72,16 @@ function SignUp() {
   if (response && response.user) return <h3>User created</h3>;
 
   return (
-    <div>
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        sendSignUp();
+      }}
+    >
       <h4>Sign Up Form</h4>
       <p>This app uses your profile picture with Gravatar from your email.</p>
       <p>If you do not have a Gravatar account, you can create one for free.</p>
+
       <div className="input-container">
         <label htmlFor="name">Name:</label>
         <input
@@ -115,7 +126,7 @@ function SignUp() {
           onChange={handleChange}
         />
       </div>
-      <button onClick={sendSignUp}>Sign Up</button>
+      <button type="submit">Sign Up</button>
       {error && (
         <p className="characters" role="alert">
           Unable to sign up. Please try again.
@@ -130,7 +141,7 @@ function SignUp() {
             </p>
           );
         })}
-    </div>
+    </form>
   );
 }
 

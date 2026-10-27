@@ -80,46 +80,56 @@ function Login() {
     <div>
       <h1>Mr Mine Odin-Book</h1>
       <h2>Login to access</h2>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          sendLogin(inputEmail, inputPass);
+        }}
+      >
+        <div className="input-container">
+          <label htmlFor="username">Email:</label>
+          <input
+            className="input-field"
+            id="username"
+            data-testid="username-input"
+            type="text"
+            value={inputEmail}
+            onChange={(event) => setInputEmail(event.target.value)}
+          />
 
-      <div className="input-container">
-        <label htmlFor="username">Email:</label>
-        <input
-          className="input-field"
-          id="username"
-          data-testid="username-input"
-          type="text"
-          value={inputEmail}
-          onChange={(event) => setInputEmail(event.target.value)}
-        />
+          <label htmlFor="password">Password:</label>
+          <input
+            className="input-field"
+            id="password"
+            data-testid="password-input"
+            type="password"
+            value={inputPass}
+            onChange={(event) => setInputPass(event.target.value)}
+          />
+        </div>
 
-        <label htmlFor="password">Password:</label>
-        <input
-          className="input-field"
-          id="password"
-          data-testid="password-input"
-          type="password"
-          value={inputPass}
-          onChange={(event) => setInputPass(event.target.value)}
-        />
-      </div>
+        {error && (
+          <p className="characters" role="alert">
+            Unable to log in. Please try again.
+          </p>
+        )}
 
-      <button onClick={() => sendLogin(inputEmail, inputPass)}>Login</button>
-      <button onClick={() => setSignUpForm((current) => !current)}>
-        or Sign Up
-      </button>
-      <button onClick={() => sendLogin(guestEmail, guestPass)}>
-        {" "}
-        Guest Login
-      </button>
+        {response && !response.user && (
+          <p className="characters">{response.message}</p>
+        )}
+
+        <button type="submit">Login</button>
+        <button onClick={() => setSignUpForm((current) => !current)}>
+          or Sign Up
+        </button>
+        <button onClick={() => sendLogin(guestEmail, guestPass)}>
+          {" "}
+          Guest Login
+        </button>
+      </form>
+
       <p>Use Guest Login to view the app without signing up!</p>
-      {error && (
-        <p className="characters" role="alert">
-          Unable to log in. Please try again.
-        </p>
-      )}
-      {response && !response.user && (
-        <p className="characters">{response.message}</p>
-      )}
+
       {signUpForm && <SignUp />}
     </div>
   );
