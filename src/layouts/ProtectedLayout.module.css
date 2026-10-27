@@ -2,3 +2,9 @@
   display: flex;
   gap: 10px;
 }
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+}

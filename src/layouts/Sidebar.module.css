@@ -4,9 +4,8 @@
   padding: 20px;
   background-color: #e6e6e6;
   border-radius: 20px;
-  min-height: 500px;
   box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
-  height: 500px;
+  height: 400px;
 }
 
 .navigation {
@@ -80,4 +79,17 @@
 .link.active {
   background-color: #783192;
   color: #fff;
+}
+
+@media (max-width: 768px) {
+  .container {
+    height: auto;
+    z-index: 2;
+  }
+
+  .navigation {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
 }
